@@ -17,23 +17,6 @@ class AppColors {
   static const ROJO =  Color(0xFFFB1218);
 
 
-  static const _PRIMARY_ = Color( 0xffff3a5a);
-  static const _PRIMARY_22 = Color( 0x22ff3a5a);
-  static const _PRIMARY_44 = Color( 0x44ff3a5a);
-
-  static const _PRIMARY_ACCENT = Color( 0xfffe494d);
-  static const _PRIMARY_ACCENT_22 = Color( 0x22ff3a5a);
-  static const _PRIMARY_ACCENT_44 = Color( 0x44ff3a5a);
-
-
-  static const PRIMARY_ = Color( 0xff005399);
-  static const PRIMARY_22 = Color( 0x22005399);
-  static const PRIMARY_44 = Color( 0x44005399);
-
-  static const PRIMARY_ACCENT = Color( 0xFF004399);
-  static const PRIMARY_ACCENT_22 = Color( 0x22004399);
-  static const PRIMARY_ACCENT_44 = Color( 0x44004399);
-
   
   
 }

@@ -72,7 +72,7 @@ class LoginState with ChangeNotifier{
     notifyListeners();
   }
   void loginState() async {
-    SharedPreferences.setMockInitialValues({});
+    // SharedPreferences.setMockInitialValues({});
     _prefs = await SharedPreferences.getInstance();
     if(_prefs.containsKey('isLoggedIn') ){
       _email=_prefs.getString('email');

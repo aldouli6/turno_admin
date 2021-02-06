@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:turno_admin/pages/home.dart';
+import 'package:turno_admin/classes/app_settings.dart';
+import 'package:turno_admin/widgets/navigation_home.dart';
 import 'package:turno_admin/pages/login.dart';
 
 import 'classes/login_state.dart';
@@ -22,13 +23,18 @@ class TurnoAdmin extends StatelessWidget {
       create: (BuildContext context) => LoginState(),
       child :MaterialApp(
         title: 'TurnoAdmin',
-      
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          textTheme: AppSettings.textTheme,
+        ),
+        // home: NavigationHome(),
         routes: {
           '/': (BuildContext context){
             var state = Provider.of<LoginState>(context, listen: true).isLoggedIn();
             
             if(state){
-              return Home();
+              return NavigationHome();
             }else{
               return Login();
               // /return NetworkSensitive();
