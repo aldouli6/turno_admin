@@ -37,8 +37,8 @@ class _DrawerUserControllerState extends State<DrawerUserController> with Ticker
 
   @override
   void initState() {
-    animationController = AnimationController(duration: const Duration(milliseconds: 2000) );
-    iconAnimationController = AnimationController( duration: const Duration(milliseconds: 0));
+    animationController = AnimationController(duration: const Duration(milliseconds: 2000), vsync: this);
+    iconAnimationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 0));
     iconAnimationController..animateTo(1.0, duration: const Duration(milliseconds: 0), curve: Curves.fastOutSlowIn);
     scrollController = ScrollController(initialScrollOffset: widget.drawerWidth);
     scrollController

@@ -43,7 +43,7 @@ Widget appBar(String _titulo, Widget _leading, Widget _actions ) {
           Padding(
             padding: const EdgeInsets.only(top: 8, right: 8),
             child: Container(
-              width: AppBar().preferredSize.height - 8,
+              width: AppBar().preferredSize.height ,
               height: AppBar().preferredSize.height - 8,
               color: Colors.white,
               child: Material(

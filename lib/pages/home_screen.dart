@@ -17,7 +17,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   void initState() {
     animationController = AnimationController(
-        duration: const Duration(milliseconds: 2000));
+        duration: const Duration(milliseconds: 2000), vsync:this);
     super.initState();
   }
 
