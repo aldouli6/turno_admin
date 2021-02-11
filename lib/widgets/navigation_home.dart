@@ -6,6 +6,9 @@ import 'package:turno_admin/widgets/drawer_user_controller.dart';
 import 'package:turno_admin/widgets/home_drawer.dart';
 
 class NavigationHome extends StatefulWidget {
+   Widget screenView;
+  DrawerIndex drawerIndex;
+  NavigationHome(this.drawerIndex,this.screenView);
   @override
   _NavigationHomeState createState() => _NavigationHomeState();
 }
@@ -16,8 +19,8 @@ class _NavigationHomeState extends State<NavigationHome> {
 
   @override
   void initState() {
-    drawerIndex = DrawerIndex.HOME;
-    screenView = const Home();
+    drawerIndex =widget.drawerIndex;
+    screenView = widget.screenView;
     super.initState();
   }
 
@@ -54,7 +57,7 @@ class _NavigationHomeState extends State<NavigationHome> {
         });
       } else if (drawerIndex == DrawerIndex.Propspects) {
         setState(() {
-          screenView = Propspects();
+          screenView = Prospects();
         });
       } else if (drawerIndex == DrawerIndex.Help) {
         setState(() {

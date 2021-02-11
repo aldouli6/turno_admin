@@ -1,6 +1,5 @@
  import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:turno_admin/classes/app_colors.dart';
 import 'package:turno_admin/classes/app_settings.dart';
 import 'package:turno_admin/classes/login_state.dart';
 import 'package:wave/config.dart';
@@ -23,7 +22,7 @@ class _LoginState extends State<Login> {
   final focus = FocusNode(); 
 
 void _loguear(String email, String pass) async {
-    var respuesta = await Provider.of<LoginState>(context, listen: false).login(email, pass);
+    var respuesta = await Provider.of<LoginState>(context, listen: false).login(context, email, pass);
     if(respuesta!='1'){
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
@@ -48,6 +47,7 @@ void _loguear(String email, String pass) async {
   }
   @override
   void initState() {
+    // ignore: todo
     // TODO: implement initState
     super.initState();
   }

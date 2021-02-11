@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:turno_admin/classes/app_settings.dart';
+import 'package:turno_admin/pages/home_screen.dart';
+import 'package:turno_admin/pages/prospect/index.dart';
+import 'package:turno_admin/widgets/home_drawer.dart';
 import 'package:turno_admin/widgets/navigation_home.dart';
 import 'package:turno_admin/pages/login.dart';
 
@@ -14,11 +17,11 @@ void main() {
 class TurnoAdmin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    //   statusBarColor: Colors.transparent,
-    //      statusBarBrightness: Brightness.light,
-    // ));
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+         statusBarBrightness: Brightness.dark,
+    ));
+    // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);/
     return ChangeNotifierProvider<LoginState>(
       create: (BuildContext context) => LoginState(),
       child :MaterialApp(
@@ -34,7 +37,7 @@ class TurnoAdmin extends StatelessWidget {
             var state = Provider.of<LoginState>(context, listen: true).isLoggedIn();
             
             if(state){
-              return NavigationHome();
+              return NavigationHome(DrawerIndex.HOME, Home());
             }else{
               return Login();
               // /return NetworkSensitive();

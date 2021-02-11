@@ -45,7 +45,6 @@ Widget appBar(String _titulo, Widget _leading, Widget _actions ) {
             child: Container(
               width: AppBar().preferredSize.height ,
               height: AppBar().preferredSize.height - 8,
-              color: Colors.white,
               child: Material(
                 color: Colors.transparent,
                 child: _actions,

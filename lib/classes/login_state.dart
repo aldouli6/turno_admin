@@ -27,11 +27,11 @@ class LoginState with ChangeNotifier{
   LoginState(){
     loginState();
   }
-  Future<String> login(String email, String pass) async {
+  Future<String> login(BuildContext context,String email, String pass) async {
     String salida='';
     _loading = true;
     notifyListeners();
-    final data =  await _handleLogin(email, pass);
+    final data =  await _handleLogin(context, email, pass);
     _loading = false;
     notifyListeners(); 
     if(data['ex']==null){
@@ -86,10 +86,10 @@ class LoginState with ChangeNotifier{
      logout();
     }
   } 
-  Future<Map<String, dynamic>> _handleLogin(String email, String _pass) async {
+  Future<Map<String, dynamic>> _handleLogin(BuildContext context, String email, String _pass) async {
     String url = AppSettings.API_URL+'/api/login';
     String json = '{"email": "'+email+'", "password": "'+_pass.toString()+'"}';
-    Map<String, dynamic> data = await http.post(url, json);
+    Map<String, dynamic> data = await http.post(context, url, json);
     return data;
 
   }
