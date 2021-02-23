@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:turno_admin/classes/app_settings.dart';
@@ -16,9 +18,12 @@ class HomeDrawer extends StatefulWidget {
 
 class _HomeDrawerState extends State<HomeDrawer> {
   List<DrawerList> drawerList;
+  String _role;
   @override
   void initState() {
     setDrawerListArray();
+    _role = Provider.of<LoginState>(context, listen: false).getRole();
+    print(_role);
     super.initState();
   }
 
@@ -28,32 +33,43 @@ class _HomeDrawerState extends State<HomeDrawer> {
         index: DrawerIndex.HOME,
         labelName: 'Home',
         icon: Icon(Icons.home),
+        roles: ['admin','super_admin']
+      ),
+      DrawerList(
+        index: DrawerIndex.Establish,
+        labelName: 'Establecimiento',
+        icon: Icon(Icons.store),
+        roles: ['preadmin']
       ),
       DrawerList(
         index: DrawerIndex.Propspects,
         labelName: 'Prospectos',
-        
         icon: Icon(Icons.verified_user),
+        roles: ['super_admin']
       ),
       DrawerList(
         index: DrawerIndex.FeedBack,
         labelName: 'FeedBack',
         icon: Icon(Icons.help),
+        roles: ['admin','super_admin']
       ),
       DrawerList(
         index: DrawerIndex.Invite,
         labelName: 'Invite Friend',
         icon: Icon(Icons.group),
+        roles: ['admin','super_admin']
       ),
       DrawerList(
         index: DrawerIndex.Share,
         labelName: 'Rate the app',
         icon: Icon(Icons.share),
+        roles: ['admin','super_admin']
       ),
       DrawerList(
         index: DrawerIndex.About,
         labelName: 'About Us',
         icon: Icon(Icons.info),
+        roles: ['admin','super_admin']
       ),
     ];
   }
@@ -131,7 +147,11 @@ class _HomeDrawerState extends State<HomeDrawer> {
               padding: const EdgeInsets.all(0.0),
               itemCount: drawerList.length,
               itemBuilder: (BuildContext context, int index) {
-                return  inkwell(drawerList[index]) ;
+                if (drawerList[index].roles.contains(_role)) {
+                  return  inkwell(drawerList[index]) ;
+                }else{
+                  return Container();
+                }
               },
             ),
           ),
@@ -267,6 +287,7 @@ enum DrawerIndex {
   HOME,
   FeedBack,
   Propspects,
+  Establish,
   Help,
   Share,
   About,
@@ -275,12 +296,15 @@ enum DrawerIndex {
 }
 
 class DrawerList {
+
+
   DrawerList({
     this.isAssetsImage = false,
     this.labelName = '',
     this.icon,
     this.index,
     this.imageName = '',
+    this.roles,
   });
 
   String labelName;
@@ -288,4 +312,5 @@ class DrawerList {
   bool isAssetsImage;
   String imageName;
   DrawerIndex index;
+  List<String> roles;
 }

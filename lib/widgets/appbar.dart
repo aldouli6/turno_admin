@@ -11,8 +11,8 @@ import 'package:turno_admin/classes/app_settings.dart';
 //                   ]
 //           );
 // }
-Widget appBar(String _titulo, Widget _leading, Widget _actions ) {
-    return SizedBox(
+ appBar(String _titulo, Widget _leading, Widget _actions )  {
+  return SizedBox(
       height: AppBar().preferredSize.height,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -33,7 +33,7 @@ Widget appBar(String _titulo, Widget _leading, Widget _actions ) {
                   _titulo,
                   style: TextStyle(
                     fontSize: 22,
-                    color: AppSettings.darkText,
+                    color: AppSettings.PRIMARY,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -54,4 +54,4 @@ Widget appBar(String _titulo, Widget _leading, Widget _actions ) {
         ],
       ),
     );
-  }
+}

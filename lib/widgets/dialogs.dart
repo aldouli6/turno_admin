@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:turno_admin/classes/app_settings.dart';
 import 'package:turno_admin/widgets/network_image.dart';
 
 class BeautifulAlertDialog extends StatelessWidget {
@@ -216,8 +218,7 @@ class CustomAlertDialog extends StatelessWidget {
   final Widget icon;
   final String buttonLabel;
   final TextStyle titleStyle = TextStyle(
-      fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.bold);
-
+        fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.bold);
   CustomAlertDialog(
       {Key key,
       this.title = "Successful",
@@ -233,62 +234,89 @@ class CustomAlertDialog extends StatelessWidget {
         type: MaterialType.transparency,
         child: Container(
           alignment: Alignment.center,
-          child: Container(
-            margin: const EdgeInsets.all(8.0),
-            padding: const EdgeInsets.all(20.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.0),
-              color: Colors.white,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                SizedBox(height: 10.0),
-                icon ??
-                    Icon(
-                      _getIconForType(type),
-                      color: _getColorForType(type),
-                      size: 50,
+          child: Column(
+                  mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                margin: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                padding: const EdgeInsets.all(20.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: const  Radius.circular(20.0),
+                    topRight: const  Radius.circular(20.0),
+                  ),
+                  color: Colors.white,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    SizedBox(height: 10.0),
+                    icon ??_getIconForType(type),
+                    const SizedBox(height: 10.0),
+                    Text(
+                      title,
+                      style: titleStyle,
+                      textAlign: TextAlign.center,
                     ),
-                const SizedBox(height: 10.0),
-                Text(
-                  title,
-                  style: titleStyle,
-                  textAlign: TextAlign.center,
+                    Divider(),
+                    Text(
+                      content,
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
-                Divider(),
-                Text(
-                  content,
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 40.0),
-                (buttonLabel!=null)?SizedBox(
+              ),
+              (buttonLabel!=null)?Container(
+                  margin: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                   width: double.infinity,
+                   decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: const  Radius.circular(20.0),
+                      bottomRight: const  Radius.circular(20.0),
+                    ),
+                    color: AppSettings.PRIMARY,
+                  ),
                   child: FlatButton(
-                    padding: const EdgeInsets.all(5.0),
+                    // padding: const EdgeInsets.all(5.0),
                     child: Text(buttonLabel),
+                    textColor: AppSettings.white,
                     onPressed: () => Navigator.pop(context, true),
                   ),
                 ):SizedBox(
                   width: double.infinity
                 ),
-              ],
-            ),
+            ],
           ),
         ));
   }
 
-  IconData _getIconForType(AlertDialogType type) {
+  Widget _getIconForType(AlertDialogType type) {
     switch (type) {
-      case AlertDialogType.WARNING:
-        return Icons.warning;
       case AlertDialogType.SUCCESS:
-        return Icons.check_circle;
+        return  Icon(
+            FontAwesomeIcons.thumbsUp,
+            color: _getColorForType(type),
+            size: 50,
+          );
+      case AlertDialogType.WARNING:
+       return Icon(
+            Icons.check_circle,
+            color: _getColorForType(type),
+            size: 50,
+          );
       case AlertDialogType.ERROR:
-        return Icons.error;
+        return Icon(
+            Icons.error,
+            color: _getColorForType(type),
+            size: 50,
+          );
       case AlertDialogType.INFO:
       default:
-        return Icons.info_outline;
+        return Icon(
+            Icons.info_outline,
+            color: _getColorForType(type),
+            size: 50,
+          );
     }
   }
 

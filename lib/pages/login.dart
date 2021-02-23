@@ -2,6 +2,7 @@
 import 'package:provider/provider.dart';
 import 'package:turno_admin/classes/app_settings.dart';
 import 'package:turno_admin/classes/login_state.dart';
+import 'package:turno_admin/pages/signup.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -22,19 +23,20 @@ class _LoginState extends State<Login> {
   final focus = FocusNode(); 
 
 void _loguear(String email, String pass) async {
-    var respuesta = await Provider.of<LoginState>(context, listen: false).login(context, email, pass);
-    if(respuesta!='1'){
-      _scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          content:Text(respuesta.toString()
-          ),
-          backgroundColor: AppSettings.DANGER,
-        )
-      );
-    }else{
-      // var mymap = {"notification": {"title": "Aviso", "body": "Se ha iniciado correctamente sesión"}, "data": {"click_action": "FLUTTER_NOTIFICATION_CLICK"}};
-      // PushNotificationsManager().showNotification(mymap );
-    }
+    var respuesta = await Provider.of<LoginState>(context, listen: false).login(context,_scaffoldKey, email, pass);
+    print(respuesta);
+    // if(respuesta!='1'){
+    //   _scaffoldKey.currentState.showSnackBar(
+    //     SnackBar(
+    //       content:Text(respuesta.toString()
+    //       ),
+    //       backgroundColor: AppSettings.DANGER,
+    //     )
+    //   );
+    // }else{
+    //   // var mymap = {"notification": {"title": "Aviso", "body": "Se ha iniciado correctamente sesión"}, "data": {"click_action": "FLUTTER_NOTIFICATION_CLICK"}};
+    //   // PushNotificationsManager().showNotification(mymap );
+    // }
   }
   String validateEmail(String value) {
     Pattern pattern =
@@ -251,7 +253,10 @@ void _loguear(String email, String pass) async {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text("No tienes una cuenta? ", style: TextStyle(color:Colors.black,fontSize: 12 ,fontWeight: FontWeight.normal),),
-                Text("Registrate ", style: TextStyle(color:AppSettings.PRIMARY, fontWeight: FontWeight.w500,fontSize: 12, decoration: TextDecoration.underline )),
+                InkWell(
+                  onTap: ()=>Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=>new Signup())),
+                  child:  Text("Registrate ", style: TextStyle(color:AppSettings.PRIMARY, fontWeight: FontWeight.w500,fontSize: 12, decoration: TextDecoration.underline ))
+                ),
               ],
             ),
            ],

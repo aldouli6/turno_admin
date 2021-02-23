@@ -14,7 +14,6 @@ import 'package:provider/provider.dart';
 import 'package:turno_admin/classes/app_settings.dart';
 import 'package:turno_admin/classes/http_service.dart';
 import 'package:turno_admin/classes/login_state.dart';
-import 'package:turno_admin/pages/home_screen.dart';
 import 'package:turno_admin/pages/prospect/index.dart';
 import 'package:turno_admin/widgets/appbar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -55,7 +54,7 @@ class _ProspectState extends State<Prospect> {
   String _image=null;
   CameraPosition _cameraPosition;
   GoogleMapController _mapController ;
-  LatLng _markerLocation = LatLng(20, -100) ;
+  LatLng _markerLocation = LatLng(20.587954, -100.3880030) ;
 
   final Set<Marker> _markers = {};
   List<Address> results = [];
@@ -108,8 +107,6 @@ class _ProspectState extends State<Prospect> {
     });
   }
   Future<void> _onCameraIdle() async {
-    
-      
       await getCurrentAddress(_markerLocation);
   } 
   Future<void>  _updatePosition(CameraPosition _position) async{
@@ -166,16 +163,27 @@ class _ProspectState extends State<Prospect> {
           }
           data['image']="prospects/prospect_";
           int elid=0;
+          Map<String, dynamic>  res= Map<String, dynamic>();
           elid =await saveProspect(data, widget.prospectId); 
           if(file!=null){
-             await http.uploadImage2(context:context, url:AppSettings.API_URL+"/api/subirimagedata", file:file , name: "prospect_"+elid.toString(), token:_authtoken );
+            FormData formData = FormData.fromMap({
+                "image": await MultipartFile.fromFile(file.path, filename:'some-file-name.png',contentType: MediaType('image','png')),
+                "name":"propects/prospect_"+elid.toString(),
+            });
+             res = await http.apiCall(context, _scaffoldKey, HttpServiceType.IMAGE, AppSettings.API_URL+"/api/subirimagedata", formData: formData, token: _authtoken);
+            //res = await uploadImage2(context:context, url:AppSettings.API_URL+"/api/subirimagedata", file:file , name: "propects/prospect_"+elid.toString(), token:_authtoken );
            }
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => NavigationHome(DrawerIndex.Propspects, Prospects())
-          ),
-        );
+           if(res!=null){
+          print('object');
+          await Future<dynamic>.delayed(const Duration(seconds: 2));
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NavigationHome(DrawerIndex.Propspects, Prospects())
+              ),
+            );
+           }
+        
         }
       },
     );
@@ -205,8 +213,8 @@ class _ProspectState extends State<Prospect> {
         },
       );
       await pr.hide();
-    
-      return response;
+      
+      return response.toString();
     } on SocketException catch(e){
         print(e);
       result = "Sin conexíon a internet o al servidor 😑";
@@ -391,7 +399,7 @@ class _ProspectState extends State<Prospect> {
                                         AppSettings.API_URL+'/storage/'+_image
                                       ):Container(),
                                     ),
-                                        FormBuilderImagePicker(
+                                      FormBuilderImagePicker(
                                         name: 'image',
                                         decoration: const InputDecoration(
                                           labelText: 'Foto',

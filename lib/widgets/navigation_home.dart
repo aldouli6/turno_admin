@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:turno_admin/classes/app_settings.dart';
+import 'package:turno_admin/pages/establishment.dart';
 import 'package:turno_admin/pages/home_screen.dart';
 import 'package:turno_admin/pages/prospect/index.dart';
 import 'package:turno_admin/widgets/drawer_user_controller.dart';
@@ -51,29 +52,27 @@ class _NavigationHomeState extends State<NavigationHome> {
   void changeIndex(DrawerIndex drawerIndexdata) {
     if (drawerIndex != drawerIndexdata) {
       drawerIndex = drawerIndexdata;
-      if (drawerIndex == DrawerIndex.HOME) {
-        setState(() {
+
+      switch (drawerIndex) {
+        case DrawerIndex.Establish:
+            screenView =  Establishment();
+          break;
+        case DrawerIndex.Propspects:
+            screenView = Prospects();
+          break;
+        case DrawerIndex.Help:
+        case DrawerIndex.FeedBack:
+        case DrawerIndex.Invite:
+        case DrawerIndex.Share:
+        case DrawerIndex.About:
+        case DrawerIndex.Testing:
+        case DrawerIndex.HOME:
           screenView = const Home();
-        });
-      } else if (drawerIndex == DrawerIndex.Propspects) {
-        setState(() {
-          screenView = Prospects();
-        });
-      } else if (drawerIndex == DrawerIndex.Help) {
-        setState(() {
-          screenView = Home();
-        });
-      } else if (drawerIndex == DrawerIndex.FeedBack) {
-        setState(() {
-          screenView = Home();
-        });
-      } else if (drawerIndex == DrawerIndex.Invite) {
-        setState(() {
-          screenView = Home();
-        });
-      } else {
-        //do in your way......
+          break;
       }
+      setState(() {
+        screenView =screenView;
+      });
     }
   }
 }

@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:turno_admin/classes/app_settings.dart';
+import 'package:turno_admin/classes/login_state.dart';
 import 'package:turno_admin/widgets/home_drawer.dart';
 
 class DrawerUserController extends StatefulWidget {
@@ -33,7 +35,7 @@ class _DrawerUserControllerState extends State<DrawerUserController> with Ticker
   AnimationController animationController;
 
   double scrolloffset = 0.0;
-
+  String _role;
   @override
   void initState() {
     animationController = AnimationController(duration: const Duration(milliseconds: 2000), vsync: this);
@@ -68,6 +70,8 @@ class _DrawerUserControllerState extends State<DrawerUserController> with Ticker
         }
       });
     WidgetsBinding.instance.addPostFrameCallback((_) => getInitState());
+
+    _role = Provider.of<LoginState>(context, listen: false).getRole();
     super.initState();
   }
 
@@ -85,7 +89,7 @@ class _DrawerUserControllerState extends State<DrawerUserController> with Ticker
       body: SingleChildScrollView(
         controller: scrollController,
         scrollDirection: Axis.horizontal,
-        physics: const PageScrollPhysics(parent: ClampingScrollPhysics()),
+        physics:  (_role!='preadmin')?PageScrollPhysics(parent: ClampingScrollPhysics()):NeverScrollableScrollPhysics(),
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width + widget.drawerWidth,
@@ -156,7 +160,7 @@ class _DrawerUserControllerState extends State<DrawerUserController> with Ticker
                                 child: widget.menuView != null
                                     ? widget.menuView
                                     : AnimatedIcon(
-                                        icon: widget.animatedIconData != null ? widget.animatedIconData : AnimatedIcons.arrow_menu,
+                                        icon: widget.animatedIconData != null ? widget.animatedIconData : AnimatedIcons.menu_arrow,
                                         color: AppSettings.PRIMARY,
                                         progress: iconAnimationController),
                               ),

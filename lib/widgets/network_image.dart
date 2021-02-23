@@ -10,14 +10,31 @@ class PNetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CachedNetworkImage(
-        imageUrl: image,
-        progressIndicatorBuilder: (context, url, downloadProgress) => 
-                Center(child: CircularProgressIndicator(value: downloadProgress.progress)),
-        errorWidget: (context, url, error) => Icon(Icons.error,color: AppSettings.DANGER,),
+    // return CachedNetworkImage(
+    //     imageUrl: image,
+    //     progressIndicatorBuilder: (context, url, downloadProgress) => 
+    //             Center(child: CircularProgressIndicator(value: downloadProgress.progress)),
+    //     errorWidget: (context, url, error) => Icon(Icons.error,color: AppSettings.DANGER,),
+    //     fit: fit,
+    //   width: width,
+    //   height: height,
+    //  );
+     return Image.network(
+         image,
+         loadingBuilder:(BuildContext context, Widget child,ImageChunkEvent loadingProgress) {
+          if (loadingProgress == null) return child;
+            return Center(
+              child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null ? 
+                    loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
+                    : null,
+              ),
+            );
+          },
         fit: fit,
       width: width,
       height: height,
      );
+     
   }
 }

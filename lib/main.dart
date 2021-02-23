@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:turno_admin/classes/app_settings.dart';
+import 'package:turno_admin/pages/establishment.dart';
 import 'package:turno_admin/pages/home_screen.dart';
 import 'package:turno_admin/pages/prospect/index.dart';
 import 'package:turno_admin/widgets/home_drawer.dart';
@@ -17,10 +18,10 @@ void main() {
 class TurnoAdmin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-         statusBarBrightness: Brightness.dark,
-    ));
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //   statusBarColor: Colors.transparent,
+    //      statusBarBrightness: Brightness.dark,
+    // ));
     // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);/
     return ChangeNotifierProvider<LoginState>(
       create: (BuildContext context) => LoginState(),
@@ -35,9 +36,13 @@ class TurnoAdmin extends StatelessWidget {
         routes: {
           '/': (BuildContext context){
             var state = Provider.of<LoginState>(context, listen: true).isLoggedIn();
+            var role = Provider.of<LoginState>(context, listen: true).getRole();
             
             if(state){
-              return NavigationHome(DrawerIndex.HOME, Home());
+              if(role=='preadmin')
+                return NavigationHome(DrawerIndex.Establish, Establishment());
+              else
+                return NavigationHome(DrawerIndex.HOME, Home());
             }else{
               return Login();
               // /return NetworkSensitive();
