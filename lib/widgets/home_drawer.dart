@@ -1,9 +1,13 @@
 import 'dart:developer';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:turno_admin/classes/app_settings.dart';
+import 'package:turno_admin/classes/http_service.dart';
 import 'package:turno_admin/classes/login_state.dart';
+import 'package:turno_admin/pages/profile.dart';
+import 'package:turno_admin/widgets/navigation_home.dart';
 
 class HomeDrawer extends StatefulWidget {
   const HomeDrawer({Key key, this.screenIndex, this.iconAnimationController, this.callBackIndex}) : super(key: key);
@@ -19,11 +23,28 @@ class HomeDrawer extends StatefulWidget {
 class _HomeDrawerState extends State<HomeDrawer> {
   List<DrawerList> drawerList;
   String _role;
+  String _userId;
+  String _authToken;
+  HttpService http = new HttpService();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+ 
+  Map<String, dynamic> _user = Map<String, dynamic>();
+  Map<String, dynamic> _estab = Map<String, dynamic>();
+
+  Future<void> getUserInfo() async {
+    _user =  await http.apiCall(context, _scaffoldKey, HttpServiceType.GET, AppSettings.API_URL+'/api/users/'+_userId, token: _authToken);
+     if(_user!=null){
+      _estab = await http.apiCall(context, _scaffoldKey, HttpServiceType.GET, AppSettings.API_URL+'/api/establishments/'+_user['establishment_id'].toString(), token: _authToken);
+     }
+  }
+
   @override
   void initState() {
     setDrawerListArray();
     _role = Provider.of<LoginState>(context, listen: false).getRole();
-    print(_role);
+    _userId = Provider.of<LoginState>(context, listen: false).getUserId();
+    _authToken = Provider.of<LoginState>(context, listen: false).getAuthToken();
+    getUserInfo();
     super.initState();
   }
 
@@ -77,6 +98,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: AppSettings.notWhite.withOpacity(0.5),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -84,7 +106,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
         children: <Widget>[
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.only(top: 40.0),
             child: Container(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -101,19 +122,48 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                   .animate(CurvedAnimation(parent: widget.iconAnimationController, curve: Curves.fastOutSlowIn))
                                   .value /
                               360),
-                          child: Container(
-                            height: 120,
-                            width: 120,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: <BoxShadow>[
-                                BoxShadow(color: AppSettings.grey.withOpacity(0.6), offset: const Offset(2.0, 4.0), blurRadius: 8),
-                              ],
-                            ),
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.all(Radius.circular(60.0)),
-                              child: Image.network('https://picsum.photos/250?image=9')
-                            ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    (_estab['name']!=null)?_estab['name']:'',
+                                    style: TextStyle(
+                                      color: AppSettings.PRIMARY,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  (_role!='user')?IconButton(icon: Icon(Icons.settings), onPressed: null):Container(),
+                                ],
+                              ),
+                          
+                              Container(
+                                height: 120,
+                                width: 120,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  boxShadow: <BoxShadow>[
+                                    BoxShadow(color: AppSettings.grey.withOpacity(0.6), offset: const Offset(2.0, 4.0), blurRadius: 8),
+                                  ],
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.all(Radius.circular(60.0)),
+                                  child: (_user['imagen']!=null)?
+                                  Image.network(AppSettings.API_URL+'/storage/'+_user['imagen'], fit: BoxFit.cover,):
+                                  (_user['name']!=null && _user['lastname']!=null)?
+                                  CircleAvatar(
+                                    backgroundColor: Colors.primaries[Random().nextInt(Colors.primaries.length)],
+                                    child: Text(_user['name'].substring(0,1).toString().toUpperCase() + _user['lastname'].substring(0,1).toString().toUpperCase(),
+                                    style: TextStyle(fontSize: 50),
+                                    ),
+                                  ):null,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       );
@@ -121,13 +171,51 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 8, left: 4),
-                    child: Text(
-                      'Super Admin',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: AppSettings.grey,
-                        fontSize: 18,
-                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            RichText(
+                              text: TextSpan(
+                                text: (_user['name']!=null)?_user['name']+' ':'',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: AppSettings.grey, 
+                                  fontSize: 18),
+                                children: <TextSpan>[
+                                  TextSpan(text: (_user['lastname']!=null)?_user['lastname']:'',
+                                      style: TextStyle(
+                                          color: AppSettings.grey,
+                                          fontSize: 18,
+                                          fontStyle: FontStyle.italic,
+                                          fontWeight: FontWeight.w300,
+                                      ),
+                                  )
+                                ]
+                                ),
+                            ),
+                            Text(
+                              (_user['email']!=null)?_user['email']:'',
+                              style: TextStyle(
+                                color: AppSettings.grey,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        ),
+                        (_role!='user')
+                        ?IconButton(
+                          icon: Icon(Icons.arrow_forward, color: AppSettings.PRIMARY,),
+                          onPressed: () =>  Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => NavigationHome(null, Profile())
+                            ),
+                          ),
+                        ):Container()
+                      ],
                     ),
                   ),
                 ],

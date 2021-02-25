@@ -55,7 +55,7 @@ class _NavigationHomeState extends State<NavigationHome> {
 
       switch (drawerIndex) {
         case DrawerIndex.Establish:
-            screenView =  Establishment();
+            screenView =  Establishment(null);
           break;
         case DrawerIndex.Propspects:
             screenView = Prospects();

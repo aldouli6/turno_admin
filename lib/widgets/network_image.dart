@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:turno_admin/classes/app_settings.dart';
@@ -21,6 +23,10 @@ class PNetworkImage extends StatelessWidget {
     //  );
      return Image.network(
          image,
+         key: ValueKey(new Random().nextInt(100)), 
+          errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
+              return Icon(Icons.error,color: AppSettings.DANGER,);
+          },
          loadingBuilder:(BuildContext context, Widget child,ImageChunkEvent loadingProgress) {
           if (loadingProgress == null) return child;
             return Center(

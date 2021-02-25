@@ -20,6 +20,7 @@ import 'package:turno_admin/classes/app_settings.dart';
 import 'package:turno_admin/classes/http_service.dart';
 import 'package:turno_admin/classes/login_state.dart';
 import 'package:turno_admin/pages/home_screen.dart';
+import 'package:turno_admin/pages/profile.dart';
 import 'package:turno_admin/widgets/appbar.dart';
 import 'package:turno_admin/widgets/dialogs.dart';
 import 'package:turno_admin/widgets/home_drawer.dart';
@@ -27,7 +28,8 @@ import 'package:turno_admin/widgets/navigation_home.dart';
 
 
 class Establishment extends StatefulWidget {
-  static final String path = "lib/src/pages/hotel/hhome.dart";
+  final  Map<String, dynamic>  estab;
+  Establishment( this.estab );
 
   @override
   _EstablishmentState createState() => _EstablishmentState();
@@ -48,22 +50,23 @@ class _EstablishmentState extends State<Establishment> {
   String _authtoken='';
   String _userId='';
   int category_id;
-  int subcategery_id;
+  int subcategory_id;
   int stepping;
-  TextEditingController cntrlStreet = new TextEditingController();
-  TextEditingController cntrlName = new TextEditingController();
-  TextEditingController cntrlNumExt = new TextEditingController();
-  TextEditingController cntrlCP = new TextEditingController();
-  TextEditingController cntrlState = new TextEditingController();
-  TextEditingController cntrlCity = new TextEditingController();
-  TextEditingController cntrlZone = new TextEditingController();
-  TextEditingController cntrlCountry = new TextEditingController();
-  TextEditingController cntrlLat = new TextEditingController();
-  TextEditingController cntrlLng = new TextEditingController();
-  TextEditingController cntrlEmail= new TextEditingController();
-  TextEditingController cntrlPhone= new TextEditingController();
+  TextEditingController cntrl_street = new TextEditingController();
+  TextEditingController cntrl_name = new TextEditingController();
+  TextEditingController cntrl_num_ext = new TextEditingController();
+  TextEditingController cntrl_num_int = new TextEditingController();
+  TextEditingController cntrl_postal_code = new TextEditingController();
+  TextEditingController cntrl_state = new TextEditingController();
+  TextEditingController cntrl_city = new TextEditingController();
+  TextEditingController cntrl_zone = new TextEditingController();
+  TextEditingController cntrl_country = new TextEditingController();
+  TextEditingController cntrl_latitude = new TextEditingController();
+  TextEditingController cntrl_longitude = new TextEditingController();
+  TextEditingController cntrl_email= new TextEditingController();
+  TextEditingController cntrl_phone= new TextEditingController();
   String validateEmail(String value) {
-    String value = cntrlEmail.text;
+    String value = cntrl_email.text;
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = new RegExp(pattern);
@@ -79,7 +82,7 @@ class _EstablishmentState extends State<Establishment> {
     );
   }
   String validateMobile(String value) {
-     value = cntrlPhone.text;
+     value = cntrl_phone.text;
     String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
     RegExp regExp = new RegExp(patttern);
     if (value.length == 0) {
@@ -146,15 +149,15 @@ class _EstablishmentState extends State<Establishment> {
       address = 'Not found';
     }
     setState(() {
-        cntrlStreet.text = street;
-        cntrlNumExt.text = name;
-        cntrlZone.text = subLocality;
-        cntrlCity.text = locality;
-        cntrlState.text = administrativeArea;
-        cntrlCP.text = postalCode;
-        cntrlCountry.text = country;
-        cntrlLat.text = _latlong.latitude.toString();
-        cntrlLng.text = _latlong.longitude.toString();
+        cntrl_street.text = street;
+        cntrl_num_ext.text = name;
+        cntrl_zone.text = subLocality;
+        cntrl_city.text = locality;
+        cntrl_state.text = administrativeArea;
+        cntrl_postal_code.text = postalCode;
+        cntrl_country.text = country;
+        cntrl_latitude.text = _latlong.latitude.toString();
+        cntrl_longitude.text = _latlong.longitude.toString();
     });
   }
   Future<void>  _updatePosition(CameraPosition _position) async{
@@ -192,44 +195,63 @@ class _EstablishmentState extends State<Establishment> {
   }
   Future<String>  getCategories(String sub) async {
     String url =  AppSettings.API_URL+'/api/categories?parentCategory='+sub;
-    Map<String, dynamic> data = await http.apiCall(context, _scaffoldKey, HttpServiceType.GET, url, token: _authtoken);
-    //  print();
-    if(data['data'].length>0){
+    var data = await http.apiCall(context, _scaffoldKey, HttpServiceType.GET, url, token: _authtoken);
+    if(data.length>0){
       setState(() {
         if(sub=="%00")
-          _categories = data['data'];
+          _categories = data;
         else
-          _subcategories = data['data'];
+          _subcategories = data;
       });
-      return data['data'].length.toString();
+      return data.length.toString();
     }else{
       setState(() {
-        _subcategories = data['data'];
+        _subcategories = data;
       });
       return null;
     }
   }
   Future<String> getData() async {
-     _cameraPosition=CameraPosition(target: _markerLocation, zoom: 20.0);
+    log(widget.estab.toString());
+    String ret = await getCategories("%00"); 
+    if(widget.estab==null){
       await getCurrentLocation();
-      String ret = await getCategories("%00");
-      print(ret);
-      return ret;
+    _cameraPosition=CameraPosition(target: _markerLocation, zoom: 20.0);
+    }else{
+      _cameraPosition=CameraPosition(target: LatLng(double.parse( widget.estab['latitude']), double.parse(widget.estab['longitude'])), zoom: 16.0);
+      await _updatePosition(_cameraPosition);
+
+      // await getCurrentAddress(_markerLocation);
+      cntrl_name.text = widget.estab['name'];
+      cntrl_email.text = widget.estab['email'];
+      cntrl_phone.text = widget.estab['phone'];
+      cntrl_num_ext.text = widget.estab['num_ext'];
+      cntrl_num_int.text = widget.estab['num_int'];
+      cntrl_street.text = widget.estab['street'];
+      cntrl_postal_code.text = widget.estab['postal_code'];
+      cntrl_city.text = widget.estab['city'];
+      cntrl_zone.text = widget.estab['zone'];
+      cntrl_country.text = widget.estab['country'];
+    }
+
+    return ret;
   }
   Future<String> _enviarInfo(Map<String, dynamic>  data) async {
       String url = AppSettings.API_URL+'/api/establishments';
-      data['name']=cntrlName.text;
-      data['email']=cntrlEmail.text;
-      data['phone']=cntrlPhone.text;
-      data['num_ext']=cntrlNumExt.text;
-      data['cp']=cntrlCP.text;
-      data['city']=cntrlCity.text;
-      data['zone']=cntrlZone.text;
-      data['country']=cntrlCountry.text;
-      data['latitude']=cntrlLat.text;
-      data['longitude']=cntrlLng.text;
-      data['categery_id']=category_id;
-      data['subcategery_id']=subcategery_id;
+      data['name']=cntrl_name.text;
+      data['email']=cntrl_email.text;
+      data['phone']=cntrl_phone.text;
+      data['num_ext']=cntrl_num_ext.text;
+      data['street']=cntrl_street.text;
+      data['num_int']=cntrl_num_int.text;
+      data['postal_code']=cntrl_postal_code.text;
+      data['city']=cntrl_city.text;
+      data['zone']=cntrl_zone.text;
+      data['country']=cntrl_country.text;
+      data['latitude']=cntrl_latitude.text;
+      data['longitude']=cntrl_longitude.text;
+      data['category_id']=category_id;
+      data['subcategory_id']=subcategory_id;
       data['stepping']=stepping;
 
       print(jsonEncode(data));
@@ -253,6 +275,53 @@ class _EstablishmentState extends State<Establishment> {
           Provider.of<LoginState>(context, listen: false).changeRole('admin');
           _customAlertDialog(context, AlertDialogType.SUCCESS);
         }
+      }
+
+
+      return null;
+  }
+  Future<String> _guardarEstab() async {
+      final data = Map<String,dynamic>.from(_formKey.currentState.value);
+      String url = AppSettings.API_URL+'/api/establishments/'+widget.estab['id'].toString();
+      data['name']=cntrl_name.text;
+      data['email']=cntrl_email.text;
+      data['phone']=cntrl_phone.text;
+      data['num_ext']=cntrl_num_ext.text;
+      data['street']=cntrl_street.text;
+      data['num_int']=cntrl_num_int.text;
+      data['postal_code']=cntrl_postal_code.text;
+      data['city']=cntrl_city.text;
+      data['zone']=cntrl_zone.text;
+      data['country']=cntrl_country.text;
+      data['state']=cntrl_state.text;
+      data['latitude']=cntrl_latitude.text;
+      data['longitude']=cntrl_longitude.text;
+      data['category_id']=widget.estab['category_id'];
+      data['stepping']=widget.estab['stepping'];
+      data['subcategory_id']=widget.estab['subcategory_id'];
+      data['logo']=widget.estab['logo'];
+
+      print(jsonEncode(data));
+
+      Map<String, dynamic> res = await http.apiCall(context, _scaffoldKey, HttpServiceType.PUT, url, json: jsonEncode(data), token: _authtoken);
+      
+      if (res!=null) {
+        await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return CustomAlertDialog(
+              type: AlertDialogType.SUCCESS,
+              title: "Correcto", content: 'Establecimiento guardado correctamente.',
+            );
+          },
+        ).then((value){
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NavigationHome(null, Profile())
+            ),
+          );
+        });
       }
 
 
@@ -313,9 +382,9 @@ class _EstablishmentState extends State<Establishment> {
   }
   @override
   void initState() {
-    _future = getData();
     _authtoken = Provider.of<LoginState>(context, listen: false).getAuthToken();
     _userId = Provider.of<LoginState>(context, listen: false).getUserId();
+    _future = getData();
     super.initState();
 
   }
@@ -387,7 +456,7 @@ class _EstablishmentState extends State<Establishment> {
                           ),
                         ),
                       ),
-                      appBar('INFORMACIÓN',null,actionButton()),
+                      appBar('INFORMACIÓN',(widget.estab==null)?null:leadingIconBack(context),actionButton()),
                     ],
                   ),
                   Expanded(
@@ -402,7 +471,7 @@ class _EstablishmentState extends State<Establishment> {
                                 errorText:'Este campo no puede ser vacío',
                               ),
                             name: 'name',
-                            controller: cntrlName,
+                            controller: cntrl_name,
                             textInputAction:  TextInputAction.next,
                             onEditingComplete: () => node.nextFocus(),
                             decoration: InputDecoration(
@@ -418,7 +487,7 @@ class _EstablishmentState extends State<Establishment> {
                           FormBuilderTextField(
                             validator: validateEmail,
                             name: 'email',
-                            controller: cntrlEmail,
+                            controller: cntrl_email,
                             keyboardType: TextInputType.emailAddress,
                             textInputAction:  TextInputAction.next,
                             onEditingComplete: () => node.nextFocus(),
@@ -433,7 +502,7 @@ class _EstablishmentState extends State<Establishment> {
                           Divider(),
                            FormBuilderPhoneField(
                                 name: 'phone',
-                                controller: cntrlPhone,
+                                controller: cntrl_phone,
                                 textInputAction:  TextInputAction.next,
                                 onEditingComplete: () => node.nextFocus(),
                                 decoration: const InputDecoration(
@@ -449,7 +518,7 @@ class _EstablishmentState extends State<Establishment> {
                                 validator: validateMobile
                               ),
                           Divider(),
-                          FormBuilderDropdown(
+                          (widget.estab!=null)?Container():FormBuilderDropdown(
                             name: 'category_id',
                             decoration: InputDecoration(
                               labelText: 'Categoria',
@@ -476,8 +545,8 @@ class _EstablishmentState extends State<Establishment> {
                                     ))
                                 .toList(),
                           ),
-                          Divider(),
-                          (_subcategories.length>0)?FormBuilderDropdown(
+                          (widget.estab!=null)?Container():Divider(),
+                          (widget.estab!=null)?Container():(_subcategories.length>0)?FormBuilderDropdown(
                             name: 'subcategory_id',
                             decoration: InputDecoration(
                               labelText: 'Subcategoria',
@@ -488,7 +557,7 @@ class _EstablishmentState extends State<Establishment> {
                             allowClear: true,
                             onChanged: (value) {
                               setState(() {
-                                subcategery_id=value;
+                                subcategory_id=value;
                               });
                             },
                             hint: Text('Selecciona una subcategoria'),
@@ -504,7 +573,7 @@ class _EstablishmentState extends State<Establishment> {
                                 .toList(),
                           ):Container(),
                           (_subcategories.length>0)?Divider():Container(),
-                          FormBuilderDropdown(
+                          (widget.estab!=null)?Container():FormBuilderDropdown(
                             name: 'stepping',
                             decoration: InputDecoration(
                               labelText: 'Intervalo',
@@ -531,8 +600,8 @@ class _EstablishmentState extends State<Establishment> {
                                     ))
                                 .toList(),
                           ),
-                          Divider(),
-                           FormBuilderImagePicker( 
+                          (widget.estab!=null)?Container():Divider(),
+                          (widget.estab!=null)?Container():FormBuilderImagePicker( 
                             validator:
                              FormBuilderValidators.required(
                               context,
@@ -548,14 +617,14 @@ class _EstablishmentState extends State<Establishment> {
                             ),
                             maxImages: 1,
                           ),
-                          Divider(),
+                         (widget.estab!=null)?Container(): Divider(),
                           FormBuilderTextField(
                             validator:  FormBuilderValidators.required(
                               context,
                               errorText:'Este campo no puede ser vacío',
                               ),
                             name: 'street',
-                            controller: cntrlStreet,
+                            controller: cntrl_street,
                             textInputAction:  TextInputAction.next,
                             onEditingComplete: () => node.nextFocus(),
                             decoration: InputDecoration(
@@ -573,7 +642,7 @@ class _EstablishmentState extends State<Establishment> {
                               errorText:'Este campo no puede ser vacío',
                               ),
                             name: 'num_ext',
-                            controller: cntrlNumExt,
+                            controller: cntrl_num_ext,
                             textInputAction:  TextInputAction.next,
                             onEditingComplete: () => node.nextFocus(),
                             decoration: InputDecoration(
@@ -587,6 +656,7 @@ class _EstablishmentState extends State<Establishment> {
                           Divider(),
                           FormBuilderTextField(
                             name: 'num_int',
+                            controller: cntrl_num_int,
                             textInputAction:  TextInputAction.next,
                             onEditingComplete: () => node.nextFocus(),
                             decoration: InputDecoration(
@@ -607,7 +677,7 @@ class _EstablishmentState extends State<Establishment> {
                             keyboardType: TextInputType.number,
                             textInputAction:  TextInputAction.next,
                             onEditingComplete: () => node.nextFocus(),
-                            controller: cntrlCP,
+                            controller: cntrl_postal_code,
                             decoration: InputDecoration(
                               labelText: 'Código Postal',
                               hintText: 'Código Postal',
@@ -619,7 +689,7 @@ class _EstablishmentState extends State<Establishment> {
                           FormBuilderTextField(
                             name: 'zone',
                             textInputAction:  TextInputAction.next,
-                            controller: cntrlZone,
+                            controller: cntrl_zone,
                             onEditingComplete: () => node.nextFocus(),
                             decoration: InputDecoration(
                               labelText: 'Colonia',
@@ -638,7 +708,7 @@ class _EstablishmentState extends State<Establishment> {
                             readOnly: true,
                             textInputAction:  TextInputAction.next,
                             onEditingComplete: () => node.nextFocus(),
-                            controller: cntrlState,
+                            controller: cntrl_state,
                             decoration: InputDecoration(
                               labelText: 'Estado',
                               hintText: 'Estado',
@@ -654,7 +724,7 @@ class _EstablishmentState extends State<Establishment> {
                               ),
                             name: 'city',
                             readOnly: true,
-                            controller: cntrlCity,
+                            controller: cntrl_city,
                             textInputAction:  TextInputAction.next,
                             onEditingComplete: () => node.nextFocus(),
                             decoration: InputDecoration(
@@ -670,7 +740,7 @@ class _EstablishmentState extends State<Establishment> {
                             name: 'country',
                             readOnly: true,
                             textInputAction:  TextInputAction.next,
-                            controller: cntrlCountry,
+                            controller: cntrl_country,
                             onEditingComplete: () => node.nextFocus(),
                             decoration: InputDecoration(
                               labelText: 'País',
@@ -683,7 +753,7 @@ class _EstablishmentState extends State<Establishment> {
                           FormBuilderTextField(
                             name: 'latitude',
                             readOnly: true,
-                            controller: cntrlLat,
+                            controller: cntrl_latitude,
                             textInputAction:  TextInputAction.next,
                             onEditingComplete: () => node.nextFocus(),
                             decoration: InputDecoration(
@@ -697,7 +767,7 @@ class _EstablishmentState extends State<Establishment> {
                           FormBuilderTextField(
                             name: 'longitude',
                             readOnly: true,
-                            controller: cntrlLng,
+                            controller: cntrl_longitude,
                             textInputAction:  TextInputAction.next,
                             onEditingComplete: () => node.nextFocus(),
                             decoration: InputDecoration(
@@ -720,12 +790,17 @@ class _EstablishmentState extends State<Establishment> {
                     disabledColor: AppSettings.LIGTH,
                     onPressed: () async {
                       FocusScope.of(context).unfocus();
+                      
                       if (_formKey.currentState.validate()) {
-                        Map<String, dynamic>  data = await guardarImagen(_formKey);
-                        // String image = 'await guardarImagen(_formKey)';
-                        if(data!=null){
-                          // print('El nuevo Id va a ser:'+image);/
-                          await _enviarInfo(data);
+                        if(widget.estab==null){
+                          Map<String, dynamic>  data = await guardarImagen(_formKey);
+                          // String image = 'await guardarImagen(_formKey)';
+                          if(data!=null){
+                            // print('El nuevo Id va a ser:'+image);/
+                            await _enviarInfo(data);
+                          }
+                        }else{
+                          await _guardarEstab();
                         }
                       }else{
                         _scaffoldKey.currentState.showSnackBar(
@@ -736,15 +811,16 @@ class _EstablishmentState extends State<Establishment> {
                           )
                         );
                       }
+                      
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Icon(Icons.send_outlined)
+                          child: Icon((widget.estab!=null)?Icons.save:Icons.send_outlined)
                         ),
-                        Text(' E N V I A R      I N F O R M A C I Ó N', )
+                        (widget.estab!=null)?Text(' G U A R D A R '):Text(' E N V I A R      I N F O R M A C I Ó N', )
                       ],
                     ),
                   ),

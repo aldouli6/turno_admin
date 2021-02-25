@@ -40,7 +40,7 @@ class TurnoAdmin extends StatelessWidget {
             
             if(state){
               if(role=='preadmin')
-                return NavigationHome(DrawerIndex.Establish, Establishment());
+                return NavigationHome(DrawerIndex.Establish, Establishment(null));
               else
                 return NavigationHome(DrawerIndex.HOME, Home());
             }else{

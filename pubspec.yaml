@@ -37,6 +37,7 @@ dependencies:
   cached_network_image: ^2.5.0
   dio: ^3.0.10 
   progress_dialog: ^1.2.4
+  image_picker: ^0.6.6+5
 
   flutter:
     sdk: flutter

@@ -1,16 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:turno_admin/classes/app_settings.dart';
 
-// Widget elAppbar(GlobalKey<ScaffoldState> _globalKey, double _width, Widget _leadingIcon, Widget _actions ){
-//   return AppBar(
-//               backgroundColor:Variables.TRANSPARENTE,
-//               leading: _leadingIcon,
-//               elevation: 0,
-//               actions: <Widget>[
-//                 _actions,
-//                   ]
-//           );
-// }
+
+  Widget leadingIconBack(BuildContext context){  
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      color: AppSettings.PRIMARY,
+      onPressed: () => Navigator.of(context).pop(),
+    );
+  }
  appBar(String _titulo, Widget _leading, Widget _actions )  {
   return SizedBox(
       height: AppBar().preferredSize.height,
@@ -55,3 +56,17 @@ import 'package:turno_admin/classes/app_settings.dart';
       ),
     );
 }
+  
+   imgFromGallery() async {
+    File image = await  ImagePicker.pickImage(
+        source: ImageSource.gallery, imageQuality: 50
+    );
+    print(image);
+   return image;
+  }
+   imgFromCamera() async {
+    File image = await ImagePicker.pickImage(
+      source: ImageSource.camera, imageQuality: 50
+    );
+   return image;
+  }

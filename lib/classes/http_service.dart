@@ -19,9 +19,9 @@ class HttpService {
   Response res;
   Dio dio = new Dio();  
 
-  Future<Map<String, dynamic>> apiCall(BuildContext context, GlobalKey<ScaffoldState> scaffoldKey, HttpServiceType type, String url, {String json, FormData formData, String token=''}) async {
+  Future<dynamic> apiCall(BuildContext context, GlobalKey<ScaffoldState> scaffoldKey, HttpServiceType type, String url, {String json, FormData formData, String token=''}) async {
     ProgressDialog pr = ProgressDialog(context);
-    pr =  ProgressDialog(context,type: ProgressDialogType.Download, isDismissible: false, showLogs: false);
+    pr =  ProgressDialog(context,type: ProgressDialogType.Download, isDismissible: true, showLogs: true);
     String message;
     String dioerror="";
       if(token!='')
@@ -80,10 +80,9 @@ class HttpService {
           break;
     }
     await pr.hide();
-    print(res);
     
     if (res.data['success']) {
-      return res.data;
+      return res.data['data'];
     }else{
       scaffoldKey.currentState.showSnackBar(
         SnackBar(
@@ -96,6 +95,7 @@ class HttpService {
           Provider.of<LoginState>(context, listen: false).logout();
         }
       });
+    await pr.hide();
       return null;
     }
     } on SocketException catch(e){
@@ -108,7 +108,7 @@ class HttpService {
         print(e);
       message="Respuesta en mal formato 👎";
     }on DioError catch (e) { 
-      message += e.message.toString();
+      message = e.message.toString();
     }on Exception catch(e){
       message="Otro tipo de Excepción 👎";
     }
