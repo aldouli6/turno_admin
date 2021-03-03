@@ -38,11 +38,10 @@ class LoginState with ChangeNotifier{
       if (data!=null) {
         Map<String, dynamic> obj = data;
          print(obj);
-        if(obj['success']){
           _loggedIn = true;
-          _role = obj['user']['roles'][0]['name'];
-          _userId = obj['user']['id'].toString();
-          _establishment = (obj['user']['establishment']!=null)?obj['user']['establishment']:'0';
+          _role = obj['roles'][0]['name'];
+          _userId = obj['id'].toString();
+          _establishment = (obj['establishment_id']!=null)?obj['establishment_id'].toString():'0';
           _authtoken = obj['access_token'];
           _prefs.setBool('isLoggedIn', true);
           _prefs.setString('role', _role);
@@ -53,9 +52,6 @@ class LoginState with ChangeNotifier{
           print(_prefs);
           notifyListeners();
           salida= '1';
-        }else{
-          salida= obj['message'];
-        }
       }else{
         _loggedIn = false;
         notifyListeners();

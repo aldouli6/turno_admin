@@ -35,7 +35,6 @@ class _DrawerUserControllerState extends State<DrawerUserController> with Ticker
   AnimationController animationController;
 
   double scrolloffset = 0.0;
-  String _role;
   @override
   void initState() {
     animationController = AnimationController(duration: const Duration(milliseconds: 2000), vsync: this);
@@ -70,8 +69,6 @@ class _DrawerUserControllerState extends State<DrawerUserController> with Ticker
         }
       });
     WidgetsBinding.instance.addPostFrameCallback((_) => getInitState());
-
-    _role = Provider.of<LoginState>(context, listen: false).getRole();
     super.initState();
   }
 
@@ -89,7 +86,7 @@ class _DrawerUserControllerState extends State<DrawerUserController> with Ticker
       body: SingleChildScrollView(
         controller: scrollController,
         scrollDirection: Axis.horizontal,
-        physics:  (_role!='preadmin')?PageScrollPhysics(parent: ClampingScrollPhysics()):NeverScrollableScrollPhysics(),
+        physics:  NeverScrollableScrollPhysics(),
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width + widget.drawerWidth,
@@ -159,10 +156,16 @@ class _DrawerUserControllerState extends State<DrawerUserController> with Ticker
                                 // if you use your own menu view UI you add form initialization
                                 child: widget.menuView != null
                                     ? widget.menuView
-                                    : AnimatedIcon(
-                                        icon: widget.animatedIconData != null ? widget.animatedIconData : AnimatedIcons.menu_arrow,
-                                        color: AppSettings.PRIMARY,
-                                        progress: iconAnimationController),
+                                    : Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: AppSettings.LIGTH,
+                                      ),
+                                      child: AnimatedIcon(
+                                          icon: widget.animatedIconData != null ? widget.animatedIconData : AnimatedIcons.menu_arrow,
+                                          color: AppSettings.PRIMARY,
+                                          progress: iconAnimationController),
+                                    ),
                               ),
                               onTap: () {
                                 FocusScope.of(context).requestFocus(FocusNode());

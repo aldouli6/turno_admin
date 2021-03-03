@@ -11,7 +11,8 @@ import 'package:turno_admin/classes/app_settings.dart';
 import 'package:turno_admin/classes/http_service.dart';
 import 'package:turno_admin/classes/login_state.dart';
 import 'package:turno_admin/pages/establishment.dart';
-import 'package:turno_admin/widgets/appbar.dart';
+import 'package:turno_admin/pages/user/details.dart';
+import 'package:turno_admin/widgets/navigation_home.dart';
 import 'package:turno_admin/widgets/network_image.dart';
 
 class Profile extends StatefulWidget {
@@ -23,6 +24,7 @@ class _ProfileState extends State<Profile> {
   String _imageVersion=Random().nextInt(100).toString();
   String _userId;
   String _authToken;
+  String _estabId;
   String _role;
   String _direccion='';
   File _image;
@@ -30,27 +32,16 @@ class _ProfileState extends State<Profile> {
   Future<Map<String, dynamic>> _future;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   Map<String, dynamic>  _user = Map<String, dynamic>();
-  Map<String, dynamic>  _estab = Map<String, dynamic>();
-  Map<String, dynamic>  _categorie = Map<String, dynamic>();
-  Map<String, dynamic>  _subcategorie = Map<String, dynamic>();  
+  Map<String, dynamic>  _estab = Map<String, dynamic>(); 
 
   HttpService http = new HttpService();
   final ScrollController _scrollController = ScrollController();
 
   Future<Map<String, dynamic>> getData() async {
     _user = await http.apiCall(context, _scaffoldKey, HttpServiceType.GET,  AppSettings.API_URL+'/api/users/'+_userId, token: _authToken) ;
-    if(_user!=null){
-      _estab = await http.apiCall(context, _scaffoldKey, HttpServiceType.GET, AppSettings.API_URL+'/api/establishments/'+_user['establishment_id'].toString(), token: _authToken);
-      if(_estab!=null){
-        _categorie = await http.apiCall(context, _scaffoldKey, HttpServiceType.GET, AppSettings.API_URL+'/api/categories/'+_estab['category_id'].toString(), token: _authToken) ;
-        _subcategorie = await http.apiCall(context, _scaffoldKey, HttpServiceType.GET, AppSettings.API_URL+'/api/categories/'+_estab['subcategory_id'].toString(), token: _authToken) ;
-        var numint  =_estab['num_int']??'';
-          _direccion=_estab['street']+' '+_estab['num_ext'].toString()+' '+numint+' '+_estab['zone']+' '+_estab['city']+' '+_estab['state'];
-        return _estab;
-      }
-      return _estab;
-    }else 
-      return null;
+    await Future<dynamic>.delayed(const Duration(seconds: 1));
+    _estab = await http.apiCall(context, _scaffoldKey, HttpServiceType.GET, AppSettings.API_URL+'/api/establishments/'+_estabId, token: _authToken);
+     return _estab;
   }
   _uploadImage(File file, String name, String id, String field) async {
     FormData formData = FormData.fromMap({
@@ -127,14 +118,17 @@ class _ProfileState extends State<Profile> {
   void initState() {
     _userId = Provider.of<LoginState>(context, listen: false).getUserId();
     _authToken = Provider.of<LoginState>(context, listen: false).getAuthToken();
+    _estabId = Provider.of<LoginState>(context, listen: false).getEstablishment();
     _role = Provider.of<LoginState>(context, listen: false).getRole();
     _future = getData();
+    print(_role);
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
     double _heigth = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: AppSettings.LIGTH,
       key: _scaffoldKey,
       body: FutureBuilder<Map<String, dynamic>>(
         future: _future,
@@ -158,7 +152,8 @@ class _ProfileState extends State<Profile> {
                           ),
                         ),
                         onTap: () {
-                           showPicker(context, 'logo', 'establishment', _estab['id']);
+                          if(_role=='admin')
+                            showPicker(context, 'logo', 'establishment', _estab['id'].toString());
                         },
                       ),
                      Container(
@@ -189,6 +184,11 @@ class _ProfileState extends State<Profile> {
                                             contentPadding: EdgeInsets.all(0),
                                             title: Text(_user['email']),
                                             subtitle: Text(_user['phone']),
+                                            trailing: IconButton(
+                                            icon: Icon(Icons.edit), 
+                                              onPressed: () {  
+                                                Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=>new User(_user, NavigationHome(null, Profile()))));
+                                              },),
                                           ),
                                         ],
                                       ),
@@ -265,12 +265,12 @@ class _ProfileState extends State<Profile> {
                                         ),
                                         ListTile(
                                           title: Text("Categoria"),
-                                          subtitle: Text(_categorie['name']),
+                                          subtitle: Text(_estab['category_name']),
                                           leading: Icon(Icons.category),
                                         ),
                                         ListTile(
                                           title: Text("SubCategoria"),
-                                          subtitle: Text(_subcategorie['name']),
+                                          subtitle: Text(_estab['subcategory_name']),
                                           leading: Icon(Icons.category_outlined),
                                         ),
                                         ListTile(

@@ -12,6 +12,7 @@ class AppSettings {
   static const Color white = Color(0xFFFFFFFF);
   static const Color nearlyBlack = Color(0xFF213333);
   static const Color grey = Color(0xFF3A5160);
+  static const Color light_grey = Color(0xFFAFAFAF);
   static const Color dark_grey = Color(0xFF313A44);
 
   static const Color darkText = Color(0xFF253840);
@@ -35,7 +36,7 @@ class AppSettings {
   static const SUCCESS =  Color( 0xff02a1af);
   static const DANGER =  Color( 0xffcf5d77);
   static const INFO =  Color( 0xfff4df4c);
-  static const LIGTH =  Color( 0xfff0eee8);
+  static const LIGTH =  Color( 0xFFEFEFEF);
   static const DARK =  Color( 0xff929597);
 
   static const TextTheme textTheme = TextTheme(
@@ -47,7 +48,6 @@ class AppSettings {
     bodyText1: body1,
     caption: caption,
   );
-
   static const TextStyle display1 = TextStyle( // h4 -> display1
     fontFamily: fontName,
     fontWeight: FontWeight.bold,
@@ -104,5 +104,6 @@ class AppSettings {
     letterSpacing: 0.2,
     color: lightText, // was lightText
   );
+
   
 }

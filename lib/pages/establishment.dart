@@ -65,6 +65,13 @@ class _EstablishmentState extends State<Establishment> {
   TextEditingController cntrl_longitude = new TextEditingController();
   TextEditingController cntrl_email= new TextEditingController();
   TextEditingController cntrl_phone= new TextEditingController();
+  
+  
+  Widget actionButton(){
+    return InkWell(
+      onTap:()=> getCurrentLocation(),
+    );
+  }
   String validateEmail(String value) {
     String value = cntrl_email.text;
     Pattern pattern =
@@ -74,12 +81,6 @@ class _EstablishmentState extends State<Establishment> {
       return 'Ingresa un correo valido';
     else
       return null;
-  }
-  
-  Widget actionButton(){
-    return InkWell(
-      onTap:()=> getCurrentLocation(),
-    );
   }
   String validateMobile(String value) {
      value = cntrl_phone.text;
@@ -394,6 +395,7 @@ class _EstablishmentState extends State<Establishment> {
     final node = FocusScope.of(context);
     return Scaffold(
       key: _scaffoldKey,
+      backgroundColor: AppSettings.LIGTH,
       body:
       FutureBuilder<String>(
         future: _future,
@@ -456,7 +458,7 @@ class _EstablishmentState extends State<Establishment> {
                           ),
                         ),
                       ),
-                      appBar('INFORMACIÓN',(widget.estab==null)?null:leadingIconBack(context),actionButton()),
+                      appBar('INFORMACIÓN',(widget.estab==null)?null:leadingIconBack(context,AppSettings.PRIMARY),actionButton(), AppSettings.PRIMARY),
                     ],
                   ),
                   Expanded(

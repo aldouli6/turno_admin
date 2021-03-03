@@ -136,7 +136,7 @@ class _SignupState extends State<Signup> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  appBar('Registro',_leadingIcon(),null),
+                  appBar('Registro',_leadingIcon(),null, AppSettings.PRIMARY),
                   Expanded(
                     child: ListView(
                        padding: const EdgeInsets.all(8),

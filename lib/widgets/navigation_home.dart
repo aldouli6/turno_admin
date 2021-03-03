@@ -3,6 +3,7 @@ import 'package:turno_admin/classes/app_settings.dart';
 import 'package:turno_admin/pages/establishment.dart';
 import 'package:turno_admin/pages/home_screen.dart';
 import 'package:turno_admin/pages/prospect/index.dart';
+import 'package:turno_admin/pages/user/index.dart';
 import 'package:turno_admin/widgets/drawer_user_controller.dart';
 import 'package:turno_admin/widgets/home_drawer.dart';
 
@@ -59,6 +60,9 @@ class _NavigationHomeState extends State<NavigationHome> {
           break;
         case DrawerIndex.Propspects:
             screenView = Prospects();
+          break;
+        case DrawerIndex.Users:
+            screenView = Users();
           break;
         case DrawerIndex.Help:
         case DrawerIndex.FeedBack:

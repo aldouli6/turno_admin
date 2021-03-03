@@ -1,10 +1,8 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:http_parser/http_parser.dart';
 import 'package:provider/provider.dart';
 import 'package:turno_admin/classes/app_settings.dart';
 import 'package:turno_admin/classes/login_state.dart';
@@ -13,6 +11,7 @@ import 'package:turno_admin/classes/login_state.dart';
   POST,
   GET,
   PUT,
+  DELETE,
   IMAGE
 }
 class HttpService {
@@ -26,7 +25,9 @@ class HttpService {
     String dioerror="";
       if(token!='')
         dio.options.headers["Authorization"] = "Bearer $token";
-    await pr.show();
+    
+    // await pr.hide();
+     await pr.show();
     try {
       switch (type) {
       case HttpServiceType.POST:
@@ -34,19 +35,19 @@ class HttpService {
           data:json,
           onSendProgress: (int sent, int total) {
             pr.update(
+              message: url,
               progress: sent.toDouble(),
               maxProgress: total.toDouble()
             );
             log("$sent $total");
           },
-        ).catchError((error) {
-          dioerror=error.response.toString();
-        });
+        );
         break;
         case HttpServiceType.GET:
           res = await dio.get(url,
             onReceiveProgress: (int sent, int total) {
               pr.update(
+                message: url, 
                 progress: sent.toDouble(),
                 maxProgress: total.toDouble()
               );
@@ -59,6 +60,7 @@ class HttpService {
             data:json,
             onSendProgress: (int sent, int total) {
               pr.update(
+                message: 'Enviando Info',
                 progress: sent.toDouble(),
                 maxProgress: total.toDouble()
               );
@@ -78,8 +80,11 @@ class HttpService {
             },
           );
           break;
+        case HttpServiceType.DELETE:
+          res = await dio.delete(url);
+          break;
     }
-    await pr.hide();
+     await pr.hide();
     
     if (res.data['success']) {
       return res.data['data'];
@@ -92,6 +97,7 @@ class HttpService {
         )
       ).closed.then((SnackBarClosedReason reason) {
         if(res.data['error']!=null && res.data['error']=='unauthenticated'){
+
           Provider.of<LoginState>(context, listen: false).logout();
         }
       });
@@ -108,7 +114,7 @@ class HttpService {
         print(e);
       message="Respuesta en mal formato 👎";
     }on DioError catch (e) { 
-      message = e.message.toString();
+      message = e.message.toString() + e.response.toString().substring(100,500);
     }on Exception catch(e){
       message="Otro tipo de Excepción 👎";
     }

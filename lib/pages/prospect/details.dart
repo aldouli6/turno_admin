@@ -48,8 +48,8 @@ class _ProspectState extends State<Prospect> {
   HttpService http = new HttpService();
   String _title='Nuevo';
   String _authtoken='';
-  Future<String> _future;
   String _userId='';
+  Future<String> _future;
   LatLng _latlong=null;
   String _image=null;
   CameraPosition _cameraPosition;
@@ -317,7 +317,7 @@ class _ProspectState extends State<Prospect> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        appBar(_title,_leadingIcon(),actionButtons()),
+                        appBar(_title,_leadingIcon(),actionButtons(), AppSettings.PRIMARY),
                         Container(
                           height: 200,
                           child: Center(

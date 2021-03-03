@@ -29,8 +29,12 @@ class TurnoAdmin extends StatelessWidget {
         title: 'TurnoAdmin',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          primaryColor: AppSettings.PRIMARY,
           primarySwatch: Colors.blue,
           textTheme: AppSettings.textTheme,
+          scaffoldBackgroundColor: AppSettings.LIGTH,
+          hintColor: AppSettings.deactivatedText,
+          
         ),
         // home: NavigationHome(),
         routes: {

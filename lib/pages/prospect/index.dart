@@ -68,7 +68,7 @@ class _ProspectsState extends State<Prospects> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  appBar('Prospectos',null, actionButtons(context)),
+                  appBar('Prospectos',null, actionButtons(context), AppSettings.PRIMARY),
                   Expanded(child: Center(child: Text('No hay prospectos'))),
                 ],
               ),
@@ -80,7 +80,7 @@ class _ProspectsState extends State<Prospects> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  appBar('Prospectos',null, actionButtons(context)),
+                  appBar('Prospectos',null, actionButtons(context), AppSettings.PRIMARY),
                   (_prospectos.isNotEmpty)?Expanded(
                       child: RefreshIndicator(
                         onRefresh: () =>getProspects(),

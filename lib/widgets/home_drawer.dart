@@ -57,6 +57,12 @@ class _HomeDrawerState extends State<HomeDrawer> {
         roles: ['admin','super_admin']
       ),
       DrawerList(
+        index: DrawerIndex.Users,
+        labelName: 'Usuarios',
+        icon: Icon(Icons.people_alt),
+        roles:['admin','super_admin']
+      ),
+      DrawerList(
         index: DrawerIndex.Establish,
         labelName: 'Establecimiento',
         icon: Icon(Icons.store),
@@ -375,6 +381,7 @@ enum DrawerIndex {
   HOME,
   FeedBack,
   Propspects,
+  Users,
   Establish,
   Help,
   Share,
@@ -393,6 +400,7 @@ class DrawerList {
     this.index,
     this.imageName = '',
     this.roles,
+    this.colorMenu=AppSettings.PRIMARY,
   });
 
   String labelName;
@@ -401,4 +409,5 @@ class DrawerList {
   String imageName;
   DrawerIndex index;
   List<String> roles;
+  Color colorMenu;
 }

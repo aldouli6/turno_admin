@@ -209,6 +209,7 @@ enum AlertDialogType {
   WARNING,
   INFO,
   LOADING,
+  QUESTION,
 }
 
 class CustomAlertDialog extends StatelessWidget {
@@ -217,6 +218,8 @@ class CustomAlertDialog extends StatelessWidget {
   final String content;
   final Widget icon;
   final String buttonLabel;
+  final String trueButton;
+  final String falseButton;
   final TextStyle titleStyle = TextStyle(
         fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.bold);
   CustomAlertDialog(
@@ -225,6 +228,8 @@ class CustomAlertDialog extends StatelessWidget {
       @required this.content,
       this.icon,
       this.type = AlertDialogType.INFO,
+      this.trueButton ='Si',
+      this.falseButton = 'No',
       this.buttonLabel = "Ok"})
       : super(key: key);
 
@@ -266,6 +271,46 @@ class CustomAlertDialog extends StatelessWidget {
                   ],
                 ),
               ),
+              (type== AlertDialogType.QUESTION)?
+              Container(
+                margin: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Container(
+                      width: (MediaQuery.of(context).size.width -16)/2,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: const  Radius.circular(20.0),
+                        ),
+                        color: AppSettings.PRIMARY,
+                      ),
+                      child: FlatButton(
+                        // padding: const EdgeInsets.all(5.0),
+                        child: Text(trueButton),
+                        textColor: AppSettings.white,
+                        onPressed: () => Navigator.pop(context, true),
+                        
+                      ),
+                    ),
+                    Container(
+                      width: (MediaQuery.of(context).size.width -16)/2,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          bottomRight: const  Radius.circular(20.0),
+                        ),
+                        color: AppSettings.DANGER,
+                      ),
+                      child: FlatButton(
+                        // padding: const EdgeInsets.all(5.0),
+                        child: Text(falseButton),
+                        textColor: AppSettings.white,
+                        onPressed: () => Navigator.pop(context, false),
+                      ),
+                    ),
+                  ],
+                ),
+              ):
               (buttonLabel!=null)?Container(
                   margin: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                   width: double.infinity,
@@ -328,6 +373,8 @@ class CustomAlertDialog extends StatelessWidget {
         return Colors.green;
       case AlertDialogType.ERROR:
         return Colors.red;
+      case AlertDialogType.QUESTION:
+        return AppSettings.SUCCESS;
       case AlertDialogType.INFO:
       default:
         return Colors.blue;

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:turno_admin/classes/app_settings.dart';
+import 'package:turno_admin/classes/login_state.dart';
 import 'package:turno_admin/widgets/appbar.dart';
 
 class Home extends StatefulWidget {
@@ -40,16 +42,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         color: AppSettings.dark_grey,
       ),
       onTap: () {
-        // setState(() {
-        //   // multiple = !multiple;
-        // });
+        Provider.of<LoginState>(context, listen: false).logout();
       },
     );
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppSettings.white,
+      backgroundColor: AppSettings.LIGTH,
       body: FutureBuilder<bool>(
         future: getData(),
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
@@ -62,7 +62,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  appBar('',null, actionButtons()),
+                  appBar('',null, actionButtons(), AppSettings.PRIMARY),
                   Expanded(
                     child: FutureBuilder<bool>(
                       future: getData(),
