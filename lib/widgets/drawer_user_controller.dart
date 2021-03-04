@@ -1,8 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:turno_admin/classes/app_settings.dart';
-import 'package:turno_admin/classes/login_state.dart';
 import 'package:turno_admin/widgets/home_drawer.dart';
 
 class DrawerUserController extends StatefulWidget {

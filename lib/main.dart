@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:turno_admin/classes/app_settings.dart';
 import 'package:turno_admin/pages/establishment.dart';
 import 'package:turno_admin/pages/home_screen.dart';
-import 'package:turno_admin/pages/prospect/index.dart';
 import 'package:turno_admin/widgets/home_drawer.dart';
 import 'package:turno_admin/widgets/navigation_home.dart';
 import 'package:turno_admin/pages/login.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
 
 import 'classes/login_state.dart';
 
@@ -26,6 +26,17 @@ class TurnoAdmin extends StatelessWidget {
     return ChangeNotifierProvider<LoginState>(
       create: (BuildContext context) => LoginState(),
       child :MaterialApp(
+        localizationsDelegates: [
+          // ... app-specific localization delegate[s] here
+          // TODO: uncomment the line below after codegen
+          // AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: [
+          const Locale('es', ''), // English, no country code
+        ],
         title: 'TurnoAdmin',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:turno_admin/classes/app_settings.dart';
+import 'package:turno_admin/classes/http_service.dart';
 import 'package:turno_admin/widgets/network_image.dart';
 
 class BeautifulAlertDialog extends StatelessWidget {
@@ -39,6 +40,7 @@ class BeautifulAlertDialog extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       "Alert!",
+                      // ignore: deprecated_member_use
                       style: Theme.of(context).textTheme.title,
                     ),
                     SizedBox(height: 10.0),

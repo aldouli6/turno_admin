@@ -4,7 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:turno_admin/classes/app_settings.dart';
 
-
+Widget iconTooltip(String _name, IconData _icon, String _msg){
+    return Tooltip(
+      message: _msg,
+      showDuration: Duration(milliseconds: 3500),
+      child: Icon(
+          _icon,
+          color: AppSettings.DARK, 
+        ),
+    );
+  }
   Widget leadingIconBack(BuildContext context, Color color){  
     return IconButton(
       icon: Padding(
@@ -163,6 +172,7 @@ appBarAzul(context, String _titulo, Widget _leading, Widget _actions )  {
 }
   
    imgFromGallery() async {
+    // ignore: deprecated_member_use
     File image = await  ImagePicker.pickImage(
         source: ImageSource.gallery, imageQuality: 50
     );
@@ -170,6 +180,7 @@ appBarAzul(context, String _titulo, Widget _leading, Widget _actions )  {
    return image;
   }
    imgFromCamera() async {
+    // ignore: deprecated_member_use
     File image = await ImagePicker.pickImage(
       source: ImageSource.camera, imageQuality: 50
     );

@@ -38,6 +38,7 @@ dependencies:
   dio: ^3.0.10 
   progress_dialog: ^1.2.4
   image_picker: ^0.6.6+5
+  date_format: ^1.0.9
 
   flutter:
     sdk: flutter

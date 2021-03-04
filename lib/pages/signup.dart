@@ -1,12 +1,10 @@
 
 import 'dart:convert';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:form_builder_phone_field/form_builder_phone_field.dart';
 import 'package:turno_admin/classes/app_settings.dart';
 import 'package:turno_admin/classes/http_service.dart';
@@ -34,6 +32,7 @@ class _SignupState extends State<Signup> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   HttpService http = new HttpService();
   Future<String> _future;
+  // ignore: unused_field
   bool _mapa = true;
 
   void _signUp(GlobalKey<FormBuilderState> _formKey) async {

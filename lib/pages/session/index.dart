@@ -4,21 +4,22 @@ import 'package:provider/provider.dart';
 import 'package:turno_admin/classes/app_settings.dart';
 import 'package:turno_admin/classes/http_service.dart';
 import 'package:turno_admin/classes/login_state.dart';
+import 'package:turno_admin/pages/session/details.dart';
 import 'package:turno_admin/pages/user/details.dart';
 import 'package:turno_admin/widgets/appbar.dart';
 import 'package:turno_admin/widgets/dialogs.dart';
 import 'package:turno_admin/widgets/home_drawer.dart';
 import 'package:turno_admin/widgets/navigation_home.dart';
 
-class Users extends StatefulWidget {
+class Sessions extends StatefulWidget {
   @override
-  _UsersState createState() => _UsersState();
+  _SessionsState createState() => _SessionsState();
 }
 
 
-class _UsersState extends State<Users> {
+class _SessionsState extends State<Sessions> {
 
-  List _users = List();
+  List _sessions = List();
   String _authtoken='';
   String _estabId='';
   String _userId='';
@@ -35,23 +36,23 @@ class _UsersState extends State<Users> {
         color: AppSettings.white,
       ),
       onTap: () {
-        Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=>new User(null, NavigationHome(DrawerIndex.Users, Users()))));
+        Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=>new Session(null, NavigationHome(DrawerIndex.Sessions, Sessions()))));
       },
     );
   }
   Future<List> getData() async {
-    String url =  AppSettings.API_URL+'/api/users?establishment_id='+_estabId;
-    _users = await http.apiCall(context, _scaffoldKey, HttpServiceType.GET, url, token:_authtoken);
-    _users.removeWhere((element) => element['id'].toString() == _userId);
+    String url =  AppSettings.API_URL+'/api/sessions?establishment_id='+_estabId;
+    _sessions = await http.apiCall(context, _scaffoldKey, HttpServiceType.GET, url, token:_authtoken);
+    print(_sessions);
     setState(() {
-      _users = _users;
-      if(_users.length>0){
-        _future =asignFuture(_users);
+      _sessions = _sessions;
+      if(_sessions.length>0){
+        _future =asignFuture(_sessions);
       }else{
         _future = asignFuture(null);
       }
     });
-    return _users;
+    return _sessions;
   }
   Future<List> asignFuture(dynamic map) async {
     return map;
@@ -84,13 +85,15 @@ class _UsersState extends State<Users> {
                         Container(
                            width: double.infinity,
                           height: MediaQuery.of(context).size.height - (AppBar().preferredSize.height +(MediaQuery.of(context).padding.top*4)),
-                            child:Center(child: Text('Usted no tiene usuarios registrados'))
+                            child:Center(child: Text('Usted no tiene sesiones registradas'))
                         )
                       ],
+
+                     
                     )
                   ),
                 ),
-                toolBar(context,'Usuarios', actionButtons(context), null),
+                toolBar(context,'Sessiones', actionButtons(context), null),
               ],
             );
           } else {
@@ -102,14 +105,14 @@ class _UsersState extends State<Users> {
                   child:  RefreshIndicator(
                     onRefresh: ()=>  getData(),
                     child: ListView.builder(
-                      itemCount: _users.length,
+                      itemCount: _sessions.length,
                       itemBuilder: (BuildContext context, int index) {
                         return  buildList(context, index);
                       }
                     ),
                   ),
                 ),
-                toolBar(context, 'Usuarios', actionButtons(context),null),
+                toolBar(context, 'Sesiones', actionButtons(context),null),
               
               ]
             ) ;
@@ -125,7 +128,7 @@ class _UsersState extends State<Users> {
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(20.0) ),
         child: Dismissible (
-          key: Key('item ${_users[index]}'),
+          key: Key('item ${_sessions[index]}'),
           direction: DismissDirection.endToStart,
           background: Container(),
           secondaryBackground: Container(
@@ -163,7 +166,7 @@ class _UsersState extends State<Users> {
                     context, 
                     _scaffoldKey, 
                     HttpServiceType.DELETE, 
-                    AppSettings.API_URL+'/api/users/'+_users[index]['id'].toString(), 
+                    AppSettings.API_URL+'/api/sessions/'+_sessions[index]['id'].toString(), 
                     token:_authtoken
                   );
                   if(res!=null){
@@ -186,65 +189,22 @@ class _UsersState extends State<Users> {
           child: Container(
             width: double.infinity,
             decoration: BoxDecoration(
-              color: (_users[index]['enabled']==1 )?AppSettings.white:AppSettings.light_grey,
+              color: (_sessions[index]['enabled'] )?AppSettings.white:AppSettings.light_grey,
               borderRadius: new BorderRadius.circular(20)
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: ListTile(
-                leading: Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    border: Border.all(width: 3, color: AppSettings.SECONDARY),
-                    image: DecorationImage(
-                        image: NetworkImage(AppSettings.API_URL+'/storage/'+ _users[index]['imagen'].toString()),
-                        fit: BoxFit.cover),
-                  )
-                ),
-                title:RichText(
-                  text: TextSpan(
-                    text: (_users[index]['name']!=null)?_users[index]['name']+' ':'',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: AppSettings.PRIMARY, 
-                      fontSize: 18),
-                      children: <TextSpan>[
-                        TextSpan(text: (_users[index]['lastname']!=null)?_users[index]['lastname']:'',
-                          style: TextStyle(
-                            color: AppSettings.PRIMARY,
-                            fontSize: 18,
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        )
-                      ]
-                    ), 
-                  ),
+                title:Text(_sessions[index]['name']) ,
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: <Widget>[
-                        Icon( Icons.email, color: AppSettings.SECONDARY,),
-                        SizedBox(width: 5,),
-                        Text(_users[index]['email'].toString())
-                            
-                      ],
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Icon( Icons.phone, color: AppSettings.SECONDARY,),
-                        SizedBox(width: 5,),
-                        Text(_users[index]['phone'].toString())
-                            
-                      ],
-                    ),
+                    Text('Costo: \$'+_sessions[index]['cost'].toString()),
+                    Text('Duración: '+_sessions[index]['duration']),
                   ],
                 ),
                 trailing: Icon(Icons.arrow_forward, color: AppSettings.PRIMARY),
-                onTap:()=> Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=>new User(_users[index], NavigationHome(DrawerIndex.Users, Users())))),
+                onTap:()=> Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=>new Session(_sessions[index], NavigationHome(DrawerIndex.Sessions, Sessions())))),
               ),
             ),
           ),

@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -61,6 +61,12 @@ class _HomeDrawerState extends State<HomeDrawer> {
         labelName: 'Usuarios',
         icon: Icon(Icons.people_alt),
         roles:['admin','super_admin']
+      ),
+      DrawerList(
+        index: DrawerIndex.Sessions,
+        labelName: 'Sesiones',
+        icon: Icon(Icons.flag),
+        roles:['admin']
       ),
       DrawerList(
         index: DrawerIndex.Establish,
@@ -382,6 +388,7 @@ enum DrawerIndex {
   FeedBack,
   Propspects,
   Users,
+  Sessions,
   Establish,
   Help,
   Share,

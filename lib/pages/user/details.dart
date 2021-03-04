@@ -7,11 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:turno_admin/classes/app_settings.dart';
 import 'package:turno_admin/classes/http_service.dart';
 import 'package:turno_admin/classes/login_state.dart';
-import 'package:turno_admin/pages/user/index.dart';
 import 'package:turno_admin/widgets/appbar.dart';
 import 'package:turno_admin/widgets/dialogs.dart';
-import 'package:turno_admin/widgets/home_drawer.dart';
-import 'package:turno_admin/widgets/navigation_home.dart';
 
 class User extends StatefulWidget {
   final  Map<String, dynamic>  user;
@@ -29,24 +26,25 @@ class _UserState extends State<User> {
   Future<String> _future;
   String _title='Nuevo';
   String _authtoken='';
+  // ignore: unused_field
   String _userId='';
   String _estabId='';
-  TextEditingController cntrl_name= new TextEditingController();
-  TextEditingController cntrl_lastname= new TextEditingController();
-  TextEditingController cntrl_user_name= new TextEditingController();
-  TextEditingController cntrl_email= new TextEditingController();
-  TextEditingController cntrl_phone= new TextEditingController();
-  TextEditingController cntrl_password= new TextEditingController();
-  TextEditingController cntrl_password_confirmation= new TextEditingController();
+  TextEditingController cntrlname= new TextEditingController();
+  TextEditingController cntrllastname= new TextEditingController();
+  TextEditingController cntrlusername= new TextEditingController();
+  TextEditingController cntrlemail= new TextEditingController();
+  TextEditingController cntrlphone= new TextEditingController();
+  TextEditingController cntrlpassword= new TextEditingController();
+  TextEditingController cntrlpasswordconfirmation= new TextEditingController();
   bool _enabled = true;
 
   Future<String> getData() async {
     if(widget.user!=null){
-      cntrl_name.text = widget.user['name'];
-      cntrl_email.text = widget.user['email'];
-      cntrl_phone.text = (widget.user['phone'].length == 13)?widget.user['phone'].toString().substring(3):widget.user['phone'];
-      cntrl_user_name.text = widget.user['user_name'];
-      cntrl_lastname.text = widget.user['lastname'];
+      cntrlname.text = widget.user['name'];
+      cntrlemail.text = widget.user['email'];
+      cntrlphone.text = (widget.user['phone'].length == 13)?widget.user['phone'].toString().substring(3):widget.user['phone'];
+      cntrlusername.text = widget.user['user_name'];
+      cntrllastname.text = widget.user['lastname'];
       _enabled = (widget.user['enabled']==1)?true:false;
       _title = 'Editar Usuario';
     }
@@ -54,7 +52,7 @@ class _UserState extends State<User> {
       return 'Algo';
   }
   String validateEmail(String value) {
-    String value = cntrl_email.text;
+    String value = cntrlemail.text;
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = new RegExp(pattern);
@@ -64,7 +62,7 @@ class _UserState extends State<User> {
       return null;
   }
   String validateMobile(String value) {
-     value = cntrl_phone.text;
+     value = cntrlphone.text;
     String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
     RegExp regExp = new RegExp(patttern);
     if (value.length == 0) {
@@ -76,11 +74,11 @@ class _UserState extends State<User> {
     return null;
   } 
   String validateConfirm(String value) {
-     value = cntrl_password.text;
+     value = cntrlpassword.text;
     if (value.length == 0) {
           return 'Ingresa la contraseña de confirmación';
     }
-    else if (value != cntrl_password_confirmation.text) {
+    else if (value != cntrlpasswordconfirmation.text) {
           return 'La contraseña no coincide';
     }
     return null;
@@ -90,19 +88,19 @@ class _UserState extends State<User> {
       String url = '';
       if(widget.user!=null){
         url = AppSettings.API_URL+'/api/users/'+widget.user['id'].toString();
-        data['name']=cntrl_name.text;
+        data['name']=cntrlname.text;
         data['enabled']=_enabled;
-        data['lastname']=cntrl_lastname.text;
+        data['lastname']=cntrllastname.text;
       }else{
         url = AppSettings.API_URL+'/api/register';
-        data['name']=cntrl_name.text;
+        data['name']=cntrlname.text;
         data['enabled']=_enabled;
-        data['lastname']=cntrl_lastname.text;
-        data['email']=cntrl_email.text;
-        data['phone']=cntrl_phone.text;
-        data['user_name']=cntrl_user_name.text;
-        data['password']=cntrl_password.text;
-        data['password_confirmation']=cntrl_password_confirmation.text;
+        data['lastname']=cntrllastname.text;
+        data['email']=cntrlemail.text;
+        data['phone']=cntrlphone.text;
+        data['user_name']=cntrlusername.text;
+        data['password']=cntrlpassword.text;
+        data['password_confirmation']=cntrlpasswordconfirmation.text;
         data['establishment_id']=_estabId;
         data['terms']=true;
         data['role']='user';
@@ -195,7 +193,7 @@ class _UserState extends State<User> {
                                     errorText:'Este campo no puede ser vacío',
                                   ),
                                 name: 'name',
-                                controller: cntrl_name,
+                                controller: cntrlname,
                                 textInputAction:  TextInputAction.next,
                                 onEditingComplete: () => node.nextFocus(),
                                 decoration: InputDecoration(
@@ -216,7 +214,7 @@ class _UserState extends State<User> {
                                     errorText:'Este campo no puede ser vacío',
                                   ),
                                 name: 'lastname',
-                                controller: cntrl_lastname,
+                                controller: cntrllastname,
                                 textInputAction:  TextInputAction.next,
                                 onEditingComplete: () => node.nextFocus(),
                                 decoration: InputDecoration(
@@ -237,7 +235,7 @@ class _UserState extends State<User> {
                                     errorText:'Este campo no puede ser vacío',
                                   ),
                                 name: 'user_name',
-                                controller: cntrl_user_name,
+                                controller: cntrlusername,
                                 enabled: (widget.user==null),
                                 textInputAction:  TextInputAction.next,
                                 onEditingComplete: () => node.nextFocus(),
@@ -256,7 +254,7 @@ class _UserState extends State<User> {
                               FormBuilderTextField(
                                 validator: validateEmail,
                                 name: 'email',
-                                controller: cntrl_email,
+                                controller: cntrlemail,
                                 keyboardType: TextInputType.emailAddress,
                                 textInputAction:  TextInputAction.next,
                                 enabled: (widget.user==null),
@@ -275,7 +273,7 @@ class _UserState extends State<User> {
                               Divider(),
                               FormBuilderPhoneField(
                                 name: 'phone',
-                                controller: cntrl_phone,
+                                controller: cntrlphone,
                                 textInputAction:  TextInputAction.next,
                                 onEditingComplete: () => node.nextFocus(),
                                 decoration: const InputDecoration(
@@ -298,7 +296,7 @@ class _UserState extends State<User> {
                               (widget.user!=null)?Container():FormBuilderTextField(
                                 name: 'password',
                                 obscureText: true,
-                                controller: cntrl_password,
+                                controller: cntrlpassword,
                                 validator: FormBuilderValidators.compose([
                                   FormBuilderValidators.required(
                                     context,
@@ -328,7 +326,7 @@ class _UserState extends State<User> {
                               (widget.user!=null)?Container():FormBuilderTextField(
                                 name: 'password_confirmation',
                                 obscureText: true,
-                                controller: cntrl_password_confirmation,
+                                controller: cntrlpasswordconfirmation,
                                 validator: validateConfirm,
                                 textInputAction:  TextInputAction.next,
                                 onEditingComplete: () => node.nextFocus(),

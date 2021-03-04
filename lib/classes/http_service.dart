@@ -22,7 +22,6 @@ class HttpService {
     ProgressDialog pr = ProgressDialog(context);
     pr =  ProgressDialog(context,type: ProgressDialogType.Download, isDismissible: true, showLogs: true);
     String message;
-    String dioerror="";
       if(token!='')
         dio.options.headers["Authorization"] = "Bearer $token";
     
@@ -30,18 +29,18 @@ class HttpService {
      await pr.show();
     try {
       switch (type) {
-      case HttpServiceType.POST:
-        res = await dio.post(url,
-          data:json,
-          onSendProgress: (int sent, int total) {
-            pr.update(
-              message: url,
-              progress: sent.toDouble(),
-              maxProgress: total.toDouble()
-            );
-            log("$sent $total");
-          },
-        );
+        case HttpServiceType.POST:
+          res = await dio.post(url,
+            data:json,
+            onSendProgress: (int sent, int total) {
+              pr.update(
+                message: url,
+                progress: sent.toDouble(),
+                maxProgress: total.toDouble()
+              );
+              log("$sent $total");
+            },
+          );
         break;
         case HttpServiceType.GET:
           res = await dio.get(url,
@@ -85,7 +84,7 @@ class HttpService {
           break;
     }
      await pr.hide();
-    
+      print(res.data['data']);
     if (res.data['success']) {
       return res.data['data'];
     }else{
@@ -114,8 +113,11 @@ class HttpService {
         print(e);
       message="Respuesta en mal formato 👎";
     }on DioError catch (e) { 
-      message = e.message.toString() + e.response.toString().substring(100,500);
-    }on Exception catch(e){
+      if(e.response.toString().length>100)
+        message = e.message.toString() + e.response.toString().substring(100,500);
+      else
+        message = e.message.toString() + e.response.toString();
+    }on Exception {
       message="Otro tipo de Excepción 👎";
     }
     await pr.hide();

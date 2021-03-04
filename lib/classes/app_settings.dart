@@ -43,6 +43,7 @@ class AppSettings {
     headline4: display1,
     headline5: headline,
     headline6: title,
+    subtitle1: subtitle,
     subtitle2: subtitle,
     bodyText2: body2,
     bodyText1: body1,
@@ -76,9 +77,9 @@ class AppSettings {
   static const TextStyle subtitle = TextStyle( // subtitle2 -> subtitle
     fontFamily: fontName,
     fontWeight: FontWeight.w400,
-    fontSize: 14,
+    fontSize: 18,
     letterSpacing: -0.04,
-    color: darkText,
+    color: SECONDARY,
   );
 
   static const TextStyle body2 = TextStyle( // body1 -> body2

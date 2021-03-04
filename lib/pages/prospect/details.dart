@@ -48,9 +48,12 @@ class _ProspectState extends State<Prospect> {
   HttpService http = new HttpService();
   String _title='Nuevo';
   String _authtoken='';
+  // ignore: unused_field
   String _userId='';
   Future<String> _future;
+  // ignore: avoid_init_to_null
   LatLng _latlong=null;
+  // ignore: avoid_init_to_null
   String _image=null;
   CameraPosition _cameraPosition;
   GoogleMapController _mapController ;
@@ -58,6 +61,7 @@ class _ProspectState extends State<Prospect> {
 
   final Set<Marker> _markers = {};
   List<Address> results = [];
+  // ignore: unused_field
   String _direccion = '';
   getCurrentAddress(_latlong) async{
     print(_latlong);
@@ -84,8 +88,10 @@ class _ProspectState extends State<Prospect> {
   }
   Future getCurrentLocation() async {
     LocationPermission permission = await Geolocator.checkPermission();
+    // ignore: unrelated_type_equality_checks
     if (permission != PermissionStatus.granted) {
       LocationPermission permission = await Geolocator.requestPermission();
+      // ignore: unrelated_type_equality_checks
       if (permission != PermissionStatus.granted)
         getLocation();
       return;
@@ -151,6 +157,7 @@ class _ProspectState extends State<Prospect> {
       onPressed: () async {
         bool validated = _formKey.currentState.validate();
         if(validated){
+          // ignore: avoid_init_to_null
           File file =null;
           _formKey.currentState.save();
           final data = Map<String,dynamic>.from(_formKey.currentState.value);

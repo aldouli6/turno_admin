@@ -49,22 +49,22 @@ class _EstablishmentState extends State<Establishment> {
   List _subcategories =List();
   String _authtoken='';
   String _userId='';
-  int category_id;
-  int subcategory_id;
+  int categoryid;
+  int subcategoryid;
   int stepping;
-  TextEditingController cntrl_street = new TextEditingController();
-  TextEditingController cntrl_name = new TextEditingController();
-  TextEditingController cntrl_num_ext = new TextEditingController();
-  TextEditingController cntrl_num_int = new TextEditingController();
-  TextEditingController cntrl_postal_code = new TextEditingController();
-  TextEditingController cntrl_state = new TextEditingController();
-  TextEditingController cntrl_city = new TextEditingController();
-  TextEditingController cntrl_zone = new TextEditingController();
-  TextEditingController cntrl_country = new TextEditingController();
-  TextEditingController cntrl_latitude = new TextEditingController();
-  TextEditingController cntrl_longitude = new TextEditingController();
-  TextEditingController cntrl_email= new TextEditingController();
-  TextEditingController cntrl_phone= new TextEditingController();
+  TextEditingController cntrlstreet = new TextEditingController();
+  TextEditingController cntrlname = new TextEditingController();
+  TextEditingController cntrlnumext = new TextEditingController();
+  TextEditingController cntrlnumint = new TextEditingController();
+  TextEditingController cntrlpostalcode = new TextEditingController();
+  TextEditingController cntrlstate = new TextEditingController();
+  TextEditingController cntrlcity = new TextEditingController();
+  TextEditingController cntrlzone = new TextEditingController();
+  TextEditingController cntrlcountry = new TextEditingController();
+  TextEditingController cntrllatitude = new TextEditingController();
+  TextEditingController cntrllongitude = new TextEditingController();
+  TextEditingController cntrlemail= new TextEditingController();
+  TextEditingController cntrlphone= new TextEditingController();
   
   
   Widget actionButton(){
@@ -73,7 +73,7 @@ class _EstablishmentState extends State<Establishment> {
     );
   }
   String validateEmail(String value) {
-    String value = cntrl_email.text;
+    String value = cntrlemail.text;
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = new RegExp(pattern);
@@ -83,7 +83,7 @@ class _EstablishmentState extends State<Establishment> {
       return null;
   }
   String validateMobile(String value) {
-     value = cntrl_phone.text;
+     value = cntrlphone.text;
     String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
     RegExp regExp = new RegExp(patttern);
     if (value.length == 0) {
@@ -96,8 +96,10 @@ class _EstablishmentState extends State<Establishment> {
   } 
   Future getCurrentLocation() async {
     LocationPermission permission = await Geolocator.checkPermission();
+    // ignore: unrelated_type_equality_checks
     if (permission != PermissionStatus.granted) {
       LocationPermission permission = await Geolocator.requestPermission();
+      // ignore: unrelated_type_equality_checks
       if (permission != PermissionStatus.granted)
         getLocation();
       return;
@@ -150,15 +152,15 @@ class _EstablishmentState extends State<Establishment> {
       address = 'Not found';
     }
     setState(() {
-        cntrl_street.text = street;
-        cntrl_num_ext.text = name;
-        cntrl_zone.text = subLocality;
-        cntrl_city.text = locality;
-        cntrl_state.text = administrativeArea;
-        cntrl_postal_code.text = postalCode;
-        cntrl_country.text = country;
-        cntrl_latitude.text = _latlong.latitude.toString();
-        cntrl_longitude.text = _latlong.longitude.toString();
+        cntrlstreet.text = street;
+        cntrlnumext.text = name;
+        cntrlzone.text = subLocality;
+        cntrlcity.text = locality;
+        cntrlstate.text = administrativeArea;
+        cntrlpostalcode.text = postalCode;
+        cntrlcountry.text = country;
+        cntrllatitude.text = _latlong.latitude.toString();
+        cntrllongitude.text = _latlong.longitude.toString();
     });
   }
   Future<void>  _updatePosition(CameraPosition _position) async{
@@ -223,36 +225,36 @@ class _EstablishmentState extends State<Establishment> {
       await _updatePosition(_cameraPosition);
 
       // await getCurrentAddress(_markerLocation);
-      cntrl_name.text = widget.estab['name'];
-      cntrl_email.text = widget.estab['email'];
-      cntrl_phone.text = widget.estab['phone'];
-      cntrl_num_ext.text = widget.estab['num_ext'];
-      cntrl_num_int.text = widget.estab['num_int'];
-      cntrl_street.text = widget.estab['street'];
-      cntrl_postal_code.text = widget.estab['postal_code'];
-      cntrl_city.text = widget.estab['city'];
-      cntrl_zone.text = widget.estab['zone'];
-      cntrl_country.text = widget.estab['country'];
+      cntrlname.text = widget.estab['name'];
+      cntrlemail.text = widget.estab['email'];
+      cntrlphone.text = widget.estab['phone'];
+      cntrlnumext.text = widget.estab['num_ext'];
+      cntrlnumint.text = widget.estab['num_int'];
+      cntrlstreet.text = widget.estab['street'];
+      cntrlpostalcode.text = widget.estab['postal_code'];
+      cntrlcity.text = widget.estab['city'];
+      cntrlzone.text = widget.estab['zone'];
+      cntrlcountry.text = widget.estab['country'];
     }
 
     return ret;
   }
   Future<String> _enviarInfo(Map<String, dynamic>  data) async {
       String url = AppSettings.API_URL+'/api/establishments';
-      data['name']=cntrl_name.text;
-      data['email']=cntrl_email.text;
-      data['phone']=cntrl_phone.text;
-      data['num_ext']=cntrl_num_ext.text;
-      data['street']=cntrl_street.text;
-      data['num_int']=cntrl_num_int.text;
-      data['postal_code']=cntrl_postal_code.text;
-      data['city']=cntrl_city.text;
-      data['zone']=cntrl_zone.text;
-      data['country']=cntrl_country.text;
-      data['latitude']=cntrl_latitude.text;
-      data['longitude']=cntrl_longitude.text;
-      data['category_id']=category_id;
-      data['subcategory_id']=subcategory_id;
+      data['name']=cntrlname.text;
+      data['email']=cntrlemail.text;
+      data['phone']=cntrlphone.text;
+      data['num_ext']=cntrlnumext.text;
+      data['street']=cntrlstreet.text;
+      data['num_int']=cntrlnumint.text;
+      data['postal_code']=cntrlpostalcode.text;
+      data['city']=cntrlcity.text;
+      data['zone']=cntrlzone.text;
+      data['country']=cntrlcountry.text;
+      data['latitude']=cntrllatitude.text;
+      data['longitude']=cntrllongitude.text;
+      data['category_id']=categoryid;
+      data['subcategory_id']=subcategoryid;
       data['stepping']=stepping;
 
       print(jsonEncode(data));
@@ -284,19 +286,19 @@ class _EstablishmentState extends State<Establishment> {
   Future<String> _guardarEstab() async {
       final data = Map<String,dynamic>.from(_formKey.currentState.value);
       String url = AppSettings.API_URL+'/api/establishments/'+widget.estab['id'].toString();
-      data['name']=cntrl_name.text;
-      data['email']=cntrl_email.text;
-      data['phone']=cntrl_phone.text;
-      data['num_ext']=cntrl_num_ext.text;
-      data['street']=cntrl_street.text;
-      data['num_int']=cntrl_num_int.text;
-      data['postal_code']=cntrl_postal_code.text;
-      data['city']=cntrl_city.text;
-      data['zone']=cntrl_zone.text;
-      data['country']=cntrl_country.text;
-      data['state']=cntrl_state.text;
-      data['latitude']=cntrl_latitude.text;
-      data['longitude']=cntrl_longitude.text;
+      data['name']=cntrlname.text;
+      data['email']=cntrlemail.text;
+      data['phone']=cntrlphone.text;
+      data['num_ext']=cntrlnumext.text;
+      data['street']=cntrlstreet.text;
+      data['num_int']=cntrlnumint.text;
+      data['postal_code']=cntrlpostalcode.text;
+      data['city']=cntrlcity.text;
+      data['zone']=cntrlzone.text;
+      data['country']=cntrlcountry.text;
+      data['state']=cntrlstate.text;
+      data['latitude']=cntrllatitude.text;
+      data['longitude']=cntrllongitude.text;
       data['category_id']=widget.estab['category_id'];
       data['stepping']=widget.estab['stepping'];
       data['subcategory_id']=widget.estab['subcategory_id'];
@@ -373,14 +375,7 @@ class _EstablishmentState extends State<Establishment> {
     }   
   }
 
-  Widget iconTooltip(String _name, IconData _icon, String _msg){
-    return Tooltip(
-      message: _msg,
-      child: Icon(
-          _icon,
-        ),
-    );
-  }
+  
   @override
   void initState() {
     _authtoken = Provider.of<LoginState>(context, listen: false).getAuthToken();
@@ -473,7 +468,7 @@ class _EstablishmentState extends State<Establishment> {
                                 errorText:'Este campo no puede ser vacío',
                               ),
                             name: 'name',
-                            controller: cntrl_name,
+                            controller: cntrlname,
                             textInputAction:  TextInputAction.next,
                             onEditingComplete: () => node.nextFocus(),
                             decoration: InputDecoration(
@@ -489,7 +484,7 @@ class _EstablishmentState extends State<Establishment> {
                           FormBuilderTextField(
                             validator: validateEmail,
                             name: 'email',
-                            controller: cntrl_email,
+                            controller: cntrlemail,
                             keyboardType: TextInputType.emailAddress,
                             textInputAction:  TextInputAction.next,
                             onEditingComplete: () => node.nextFocus(),
@@ -504,7 +499,7 @@ class _EstablishmentState extends State<Establishment> {
                           Divider(),
                            FormBuilderPhoneField(
                                 name: 'phone',
-                                controller: cntrl_phone,
+                                controller: cntrlphone,
                                 textInputAction:  TextInputAction.next,
                                 onEditingComplete: () => node.nextFocus(),
                                 decoration: const InputDecoration(
@@ -532,7 +527,7 @@ class _EstablishmentState extends State<Establishment> {
                             onChanged: (value) {
                               getCategories(value.toString());
                               setState(() {
-                                category_id=value;
+                                categoryid=value;
                               });
                             },
                             hint: Text('Selecciona una categoria'),
@@ -559,7 +554,7 @@ class _EstablishmentState extends State<Establishment> {
                             allowClear: true,
                             onChanged: (value) {
                               setState(() {
-                                subcategory_id=value;
+                                subcategoryid=value;
                               });
                             },
                             hint: Text('Selecciona una subcategoria'),
@@ -626,7 +621,7 @@ class _EstablishmentState extends State<Establishment> {
                               errorText:'Este campo no puede ser vacío',
                               ),
                             name: 'street',
-                            controller: cntrl_street,
+                            controller: cntrlstreet,
                             textInputAction:  TextInputAction.next,
                             onEditingComplete: () => node.nextFocus(),
                             decoration: InputDecoration(
@@ -644,7 +639,7 @@ class _EstablishmentState extends State<Establishment> {
                               errorText:'Este campo no puede ser vacío',
                               ),
                             name: 'num_ext',
-                            controller: cntrl_num_ext,
+                            controller: cntrlnumext,
                             textInputAction:  TextInputAction.next,
                             onEditingComplete: () => node.nextFocus(),
                             decoration: InputDecoration(
@@ -658,7 +653,7 @@ class _EstablishmentState extends State<Establishment> {
                           Divider(),
                           FormBuilderTextField(
                             name: 'num_int',
-                            controller: cntrl_num_int,
+                            controller: cntrlnumint,
                             textInputAction:  TextInputAction.next,
                             onEditingComplete: () => node.nextFocus(),
                             decoration: InputDecoration(
@@ -679,7 +674,7 @@ class _EstablishmentState extends State<Establishment> {
                             keyboardType: TextInputType.number,
                             textInputAction:  TextInputAction.next,
                             onEditingComplete: () => node.nextFocus(),
-                            controller: cntrl_postal_code,
+                            controller: cntrlpostalcode,
                             decoration: InputDecoration(
                               labelText: 'Código Postal',
                               hintText: 'Código Postal',
@@ -691,7 +686,7 @@ class _EstablishmentState extends State<Establishment> {
                           FormBuilderTextField(
                             name: 'zone',
                             textInputAction:  TextInputAction.next,
-                            controller: cntrl_zone,
+                            controller: cntrlzone,
                             onEditingComplete: () => node.nextFocus(),
                             decoration: InputDecoration(
                               labelText: 'Colonia',
@@ -710,7 +705,7 @@ class _EstablishmentState extends State<Establishment> {
                             readOnly: true,
                             textInputAction:  TextInputAction.next,
                             onEditingComplete: () => node.nextFocus(),
-                            controller: cntrl_state,
+                            controller: cntrlstate,
                             decoration: InputDecoration(
                               labelText: 'Estado',
                               hintText: 'Estado',
@@ -726,7 +721,7 @@ class _EstablishmentState extends State<Establishment> {
                               ),
                             name: 'city',
                             readOnly: true,
-                            controller: cntrl_city,
+                            controller: cntrlcity,
                             textInputAction:  TextInputAction.next,
                             onEditingComplete: () => node.nextFocus(),
                             decoration: InputDecoration(
@@ -742,7 +737,7 @@ class _EstablishmentState extends State<Establishment> {
                             name: 'country',
                             readOnly: true,
                             textInputAction:  TextInputAction.next,
-                            controller: cntrl_country,
+                            controller: cntrlcountry,
                             onEditingComplete: () => node.nextFocus(),
                             decoration: InputDecoration(
                               labelText: 'País',
@@ -755,7 +750,7 @@ class _EstablishmentState extends State<Establishment> {
                           FormBuilderTextField(
                             name: 'latitude',
                             readOnly: true,
-                            controller: cntrl_latitude,
+                            controller: cntrllatitude,
                             textInputAction:  TextInputAction.next,
                             onEditingComplete: () => node.nextFocus(),
                             decoration: InputDecoration(
@@ -769,7 +764,7 @@ class _EstablishmentState extends State<Establishment> {
                           FormBuilderTextField(
                             name: 'longitude',
                             readOnly: true,
-                            controller: cntrl_longitude,
+                            controller: cntrllongitude,
                             textInputAction:  TextInputAction.next,
                             onEditingComplete: () => node.nextFocus(),
                             decoration: InputDecoration(

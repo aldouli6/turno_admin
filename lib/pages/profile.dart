@@ -27,6 +27,7 @@ class _ProfileState extends State<Profile> {
   String _estabId;
   String _role;
   String _direccion='';
+  // ignore: unused_field
   File _image;
   Map<String,File> _images =  Map<String,File>();
   Future<Map<String, dynamic>> _future;
@@ -57,6 +58,7 @@ class _ProfileState extends State<Profile> {
     print(result);
   }
     _imgFromCamera(String key) async {
+      // ignore: deprecated_member_use
       File image = await ImagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50
       );
@@ -66,6 +68,7 @@ class _ProfileState extends State<Profile> {
     }
 
     _imgFromGallery(String key) async {
+      // ignore: deprecated_member_use
       File image = await  ImagePicker.pickImage(
           source: ImageSource.gallery, imageQuality: 50
       );
@@ -178,6 +181,7 @@ class _ProfileState extends State<Profile> {
                                         children: <Widget>[
                                           Text(
                                             _user['name']+' '+_user['lastname'],
+                                            // ignore: deprecated_member_use
                                             style: Theme.of(context).textTheme.title,
                                           ),
                                           ListTile(
