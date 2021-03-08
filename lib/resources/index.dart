@@ -4,21 +4,21 @@ import 'package:provider/provider.dart';
 import 'package:turno_admin/classes/app_settings.dart';
 import 'package:turno_admin/classes/http_service.dart';
 import 'package:turno_admin/classes/login_state.dart';
-import 'package:turno_admin/pages/user/details.dart';
+import 'package:turno_admin/resources/details.dart';
 import 'package:turno_admin/widgets/appbar.dart';
 import 'package:turno_admin/widgets/dialogs.dart';
 import 'package:turno_admin/widgets/home_drawer.dart';
 import 'package:turno_admin/widgets/navigation_home.dart';
 
-class Users extends StatefulWidget {
+class Resources extends StatefulWidget {
   @override
-  _UsersState createState() => _UsersState();
+  _ResourcesState createState() => _ResourcesState();
 }
 
 
-class _UsersState extends State<Users> {
+class _ResourcesState extends State<Resources> {
 
-  List _users = List();
+  List _resources = List();
   String _authtoken='';
   String _estabId='';
   String _userId='';
@@ -35,23 +35,22 @@ class _UsersState extends State<Users> {
         color: AppSettings.white,
       ),
       onTap: () {
-        Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=>new User(null, NavigationHome(DrawerIndex.Users, Users()))));
+        Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=>new Resource(null, NavigationHome(DrawerIndex.Resources, Resources()))));
       },
     );
   }
   Future<List> getData() async {
-    String url =  AppSettings.API_URL+'/api/users?establishment_id='+_estabId;
-    _users = await http.apiCall(context, _scaffoldKey, HttpServiceType.GET, url, token:_authtoken);
-    _users.removeWhere((element) => element['id'].toString() == _userId);
+    String url =  AppSettings.API_URL+'/api/resources?establishment_id='+_estabId;
+    _resources = await http.apiCall(context, _scaffoldKey, HttpServiceType.GET, url, token:_authtoken);
     setState(() {
-      _users = _users;
-      if(_users.length>0){
-        _future =asignFuture(_users);
+      _resources = _resources;
+      if(_resources.length>0){
+        _future =asignFuture(_resources);
       }else{
         _future = asignFuture(null);
       }
     });
-    return _users;
+    return _resources;
   }
   Future<List> asignFuture(dynamic map) async {
     return map;
@@ -83,33 +82,35 @@ class _UsersState extends State<Users> {
                       children: [
                         Container(
                            width: double.infinity,
-                          height: MediaQuery.of(context).size.height - (AppBar().preferredSize.height*2 +(MediaQuery.of(context).padding.top)),
-                            child:Center(child: Text('Usted no tiene usuarios registrados'))
+                          height: MediaQuery.of(context).size.height - ((AppBar().preferredSize.height *2)+MediaQuery.of(context).padding.top),
+                            child:Center(child: Text('Usted no tiene recursos registrados'))
                         )
                       ],
+
+                     
                     )
                   ),
                 ),
-                toolBar(context,'Usuarios', actionButtons(context), null),
+                toolBar(context,'Recursos', actionButtons(context), null),
               ],
             );
           } else {
             return Stack(
               children: <Widget>[
                 Container(
-                  padding: EdgeInsets.only(top: AppBar().preferredSize.height*2 +(MediaQuery.of(context).padding.top),),
+                  padding: EdgeInsets.only(top:  ((AppBar().preferredSize.height * 2)+MediaQuery.of(context).padding.top)),
                   width: double.infinity,
                   child:  RefreshIndicator(
                     onRefresh: ()=>  getData(),
                     child: ListView.builder(
-                      itemCount: _users.length,
+                      itemCount: _resources.length,
                       itemBuilder: (BuildContext context, int index) {
                         return  buildList(context, index);
                       }
                     ),
                   ),
                 ),
-                toolBar(context, 'Usuarios', actionButtons(context),null),
+                toolBar(context, 'Recursos', actionButtons(context),null),
               
               ]
             ) ;
@@ -125,7 +126,7 @@ class _UsersState extends State<Users> {
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(20.0) ),
         child: Dismissible (
-          key: Key('item ${_users[index]}'),
+          key: Key('item ${_resources[index]}'),
           direction: DismissDirection.endToStart,
           background: Container(),
           secondaryBackground: Container(
@@ -163,7 +164,7 @@ class _UsersState extends State<Users> {
                     context, 
                     _scaffoldKey, 
                     HttpServiceType.DELETE, 
-                    AppSettings.API_URL+'/api/users/'+_users[index]['id'].toString(), 
+                    AppSettings.API_URL+'/api/resources/'+_resources[index]['id'].toString(), 
                     token:_authtoken
                   );
                   if(res!=null){
@@ -186,64 +187,21 @@ class _UsersState extends State<Users> {
           child: Container(
             width: double.infinity,
             decoration: BoxDecoration(
-              color: (_users[index]['enabled']==1 )?AppSettings.white:AppSettings.light_grey,
+              color: (_resources[index]['enabled'] )?AppSettings.white:AppSettings.light_grey,
               borderRadius: new BorderRadius.circular(20)
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: ListTile(
-                leading: Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    image: DecorationImage(
-                        image: NetworkImage(AppSettings.API_URL+'/storage/'+ _users[index]['imagen'].toString()),
-                        fit: BoxFit.cover),
-                  )
-                ),
-                title:RichText(
-                  text: TextSpan(
-                    text: (_users[index]['name']!=null)?_users[index]['name']+' ':'',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: AppSettings.PRIMARY, 
-                      fontSize: 18),
-                      children: <TextSpan>[
-                        TextSpan(text: (_users[index]['lastname']!=null)?_users[index]['lastname']:'',
-                          style: TextStyle(
-                            color: AppSettings.PRIMARY,
-                            fontSize: 18,
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        )
-                      ]
-                    ), 
-                  ),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: <Widget>[
-                        Icon( Icons.email, color: AppSettings.SECONDARY,),
-                        SizedBox(width: 5,),
-                        Text(_users[index]['email'].toString())
-                            
-                      ],
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Icon( Icons.phone, color: AppSettings.SECONDARY,),
-                        SizedBox(width: 5,),
-                        Text(_users[index]['phone'].toString())
-                            
-                      ],
-                    ),
-                  ],
-                ),
+                title:Text(_resources[index]['name']) ,
+                // subtitle: Column(
+                //   crossAxisAlignment: CrossAxisAlignment.start,
+                //   children: [
+                //      Text(_resources[index].toString()),
+                //   ],
+                // ),
                 trailing: Icon(Icons.arrow_forward, color: AppSettings.PRIMARY),
-                onTap:()=> Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=>new User(_users[index], NavigationHome(DrawerIndex.Users, Users())))),
+                onTap:()=> Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=>new Resource(_resources[index], NavigationHome(DrawerIndex.Resources, Resources())))),
               ),
             ),
           ),

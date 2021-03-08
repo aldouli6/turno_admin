@@ -2,6 +2,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:turno_admin/classes/app_settings.dart';
 import 'package:turno_admin/classes/http_service.dart';
@@ -69,6 +70,12 @@ class _HomeDrawerState extends State<HomeDrawer> {
         roles:['admin']
       ),
       DrawerList(
+        index: DrawerIndex.Resources,
+        labelName: 'Resources',
+        icon: Icon(FontAwesomeIcons.cubes),
+        roles:['admin']
+      ),
+      DrawerList(
         index: DrawerIndex.Establish,
         labelName: 'Establecimiento',
         icon: Icon(Icons.store),
@@ -119,7 +126,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
           Container(
             width: double.infinity,
             child: Container(
-              padding: const EdgeInsets.all(16.0),
+              padding:  EdgeInsets.fromLTRB(16, MediaQuery.of(context).padding.top ,16,16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -389,6 +396,7 @@ enum DrawerIndex {
   Propspects,
   Users,
   Sessions,
+  Resources,
   Establish,
   Help,
   Share,

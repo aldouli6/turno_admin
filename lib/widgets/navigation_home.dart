@@ -5,6 +5,7 @@ import 'package:turno_admin/pages/home_screen.dart';
 import 'package:turno_admin/pages/prospect/index.dart';
 import 'package:turno_admin/pages/session/index.dart'; 
 import 'package:turno_admin/pages/user/index.dart';
+import 'package:turno_admin/resources/index.dart';
 import 'package:turno_admin/widgets/drawer_user_controller.dart';
 import 'package:turno_admin/widgets/home_drawer.dart';
 
@@ -77,6 +78,9 @@ class _NavigationHomeState extends State<NavigationHome> {
           break;
         case DrawerIndex.Sessions:
           screenView = Sessions();
+          break;
+        case DrawerIndex.Resources:
+          screenView = Resources();
           break;
       }
       setState(() {

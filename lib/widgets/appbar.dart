@@ -28,7 +28,7 @@ toolBar( context , String _titulo, Widget _leading, Widget _actions)  {
   return Stack(
     children: [
       Container(
-      height: AppBar().preferredSize.height +(MediaQuery.of(context).padding.top*3),
+      height: (AppBar().preferredSize.height*2) +(MediaQuery.of(context).padding.top),
       width: double.infinity,
       decoration: BoxDecoration(
           color: AppSettings.PRIMARY,
@@ -45,7 +45,7 @@ toolBar( context , String _titulo, Widget _leading, Widget _actions)  {
         child: Column(
           children: <Widget>[
             SizedBox(
-              height: AppBar().preferredSize.height +(MediaQuery.of(context).padding.top*2),
+              height: AppBar().preferredSize.height*1.5 +(MediaQuery.of(context).padding.top),
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),

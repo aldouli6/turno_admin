@@ -42,6 +42,10 @@ class _ProfileState extends State<Profile> {
     _user = await http.apiCall(context, _scaffoldKey, HttpServiceType.GET,  AppSettings.API_URL+'/api/users/'+_userId, token: _authToken) ;
     await Future<dynamic>.delayed(const Duration(seconds: 1));
     _estab = await http.apiCall(context, _scaffoldKey, HttpServiceType.GET, AppSettings.API_URL+'/api/establishments/'+_estabId, token: _authToken);
+    if(_estab!=null){
+      var numint  =_estab['num_int']??'';
+          _direccion=_estab['street']+' '+_estab['num_ext'].toString()+' '+numint+' '+_estab['zone']+' '+_estab['city']+' '+_estab['state'];
+    }
      return _estab;
   }
   _uploadImage(File file, String name, String id, String field) async {
@@ -60,7 +64,7 @@ class _ProfileState extends State<Profile> {
     _imgFromCamera(String key) async {
       // ignore: deprecated_member_use
       File image = await ImagePicker.pickImage(
-        source: ImageSource.camera, imageQuality: 50
+        source: ImageSource.camera, imageQuality: 20
       );
       setState(() {
         _images[key] = image;
@@ -70,7 +74,7 @@ class _ProfileState extends State<Profile> {
     _imgFromGallery(String key) async {
       // ignore: deprecated_member_use
       File image = await  ImagePicker.pickImage(
-          source: ImageSource.gallery, imageQuality: 50
+          source: ImageSource.gallery, imageQuality: 20
       );
 
       setState(() {

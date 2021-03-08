@@ -5,7 +5,6 @@ import 'package:turno_admin/classes/app_settings.dart';
 import 'package:turno_admin/classes/http_service.dart';
 import 'package:turno_admin/classes/login_state.dart';
 import 'package:turno_admin/pages/session/details.dart';
-import 'package:turno_admin/pages/user/details.dart';
 import 'package:turno_admin/widgets/appbar.dart';
 import 'package:turno_admin/widgets/dialogs.dart';
 import 'package:turno_admin/widgets/home_drawer.dart';
@@ -84,7 +83,7 @@ class _SessionsState extends State<Sessions> {
                       children: [
                         Container(
                            width: double.infinity,
-                          height: MediaQuery.of(context).size.height - (AppBar().preferredSize.height +(MediaQuery.of(context).padding.top*4)),
+                          height: MediaQuery.of(context).size.height - ((AppBar().preferredSize.height *2)+MediaQuery.of(context).padding.top),
                             child:Center(child: Text('Usted no tiene sesiones registradas'))
                         )
                       ],
@@ -100,7 +99,7 @@ class _SessionsState extends State<Sessions> {
             return Stack(
               children: <Widget>[
                 Container(
-                  padding: EdgeInsets.only(top: AppBar().preferredSize.height +(MediaQuery.of(context).padding.top*3),),
+                  padding: EdgeInsets.only(top:  ((AppBar().preferredSize.height * 2)+MediaQuery.of(context).padding.top)),
                   width: double.infinity,
                   child:  RefreshIndicator(
                     onRefresh: ()=>  getData(),
